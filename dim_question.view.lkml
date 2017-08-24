@@ -298,7 +298,7 @@ view: dim_question {
 
   dimension: question_mode {
     type: string
-    sql: ${TABLE}.QUESTION_MODE ;;
+    sql: ${TABLE}.QUESTION_MODE;;
   }
 
   dimension: questionid {

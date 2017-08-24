@@ -29,7 +29,10 @@ explore: dim_question {
     relationship: many_to_one
   }
 
-
+  join: sectionaveragetaq {
+    sql_on: ${responses.sectionslessonsid} = ${sectionaveragetaq.sectionslessonid} ;;
+    relationship: many_to_one
+  }
 
 
 }

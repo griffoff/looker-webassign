@@ -1,4 +1,5 @@
 view: dim_textbook {
+  label: "Textbook"
   sql_table_name: WA2ANALYTICS.DIM_TEXTBOOK ;;
 
   dimension: dim_textbook_id {

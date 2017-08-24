@@ -1,4 +1,6 @@
 view: sectionslessons {
+  #same as deployment
+  #which is an assignment given to a specific class
   sql_table_name: WA2ANALYTICS.SECTIONSLESSONS ;;
 
   dimension: id {
