@@ -6,24 +6,32 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-explore: attemptsbyquestion {
+explore: dim_question {
+  label: "Question Analysis"
 
-}
+  join: responses {
+    sql_on: ${dim_question.questionid} = ${responses.questionid};;
+    relationship: one_to_many
+  }
 
-explore: attemptsbyquestionbox {}
-
-explore: classstatistics {}
-
-explore: conceptreportingsettings {}
-
-explore: lessonscores {}
-
-explore: responses {
-  label: "Response Analysis"
-  join: dim_question {
-    sql_on: ${responses.questionid} = ${dim_question.questionid} ;;
+  join: dim_textbook {
+    sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
     relationship: many_to_one
   }
+
+  join: user_sso_guid {
+    sql_on: ${responses.userid} = ${user_sso_guid.userid} ;;
+    relationship: many_to_one
+  }
+
+  join: sectionslessons {
+    sql_on: ${responses.sectionslessonsid} = ${sectionslessons.id} ;;
+    relationship: many_to_one
+  }
+
+
+
+
 }
 
 explore: scores {}

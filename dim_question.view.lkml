@@ -1,5 +1,8 @@
 view: dim_question {
+  view_label: "Question"
   sql_table_name: WA2ANALYTICS.DIM_QUESTION ;;
+
+  set: all {fields:[dim_question_id, dim_textbook.dim_textbook_id, dim_textbook.name, dim_textbook.publisher_name]}
 
   dimension: dim_question_id {
     primary_key: yes
@@ -11,6 +14,11 @@ view: dim_question {
     type: number
     sql: ${TABLE}.AUTHOR_USER_ID ;;
   }
+
+#   dimension: is_webassign_author {
+#     type:  yesno
+#     sql: ${author_user_id} = 3162  ;;
+#   }
 
   dimension: chapter {
     type: string
@@ -314,9 +322,16 @@ view: dim_question {
     sql: ${TABLE}.REQ_QUESTION_PART_SUBMISSION ;;
   }
 
+  dimension: taq_avg_time_secs {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.TAQ_AVG_TIME;;
+  }
+
   dimension: taq_avg_time {
     type: number
-    sql: ${TABLE}.TAQ_AVG_TIME ;;
+    sql: ${taq_avg_time_secs} / 60 / 60 / 24;;
+    value_format: "m \m\i\n s \s\e\c\s"
   }
 
   dimension: taq_med_time {
@@ -324,8 +339,8 @@ view: dim_question {
     sql: ${TABLE}.TAQ_MED_TIME ;;
   }
 
-  dimension: taq_num_students {
-    type: number
+  measure: taq_num_students {
+    type: sum
     sql: ${TABLE}.TAQ_NUM_STUDENTS ;;
   }
 
@@ -342,6 +357,6 @@ view: dim_question {
 
   measure: count {
     type: count
-    drill_fields: [dim_question_id, dim_textbook.dim_textbook_id, dim_textbook.name, dim_textbook.publisher_name]
+    drill_fields: [all*]
   }
 }
