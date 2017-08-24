@@ -8,6 +8,8 @@ view: attemptsbyquestion {
   }
 
   dimension: attemptnum {
+    label: "Attempt Number"
+    description: "The attempt number"
     type: number
     sql: ${TABLE}.ATTEMPTNUM ;;
   }
