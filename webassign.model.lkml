@@ -33,14 +33,16 @@ explore: dim_question {
     sql_on: ${responses.sectionslessonsid} = ${sectionaveragetaq.sectionslessonid} ;;
     relationship: many_to_one
   }
+  join: lessonscores{
+    sql_on:  ${lessonscores.lessonid} = ${sectionslessons.lessonid}
+       and ${lessonscores.userid} = ${responses.userid};;
+    relationship: many_to_one
+  }
+
+  join: classstatistics {
+    sql_on:  ${sectionslessons.sectionid} = ${classstatistics.sectionid} ;;
+    relationship:  one_to_one
+  }
 
 
 }
-
-explore: scores {}
-
-explore: sectionaveragetaq {}
-
-explore: studentattemptpercentages {}
-
-explore: usersectionslessonsstatistics {}
