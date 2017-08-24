@@ -43,6 +43,10 @@ explore: dim_question {
     sql_on:  ${sectionslessons.sectionid} = ${classstatistics.sectionid} ;;
     relationship:  one_to_one
   }
+}
 
 
+explore: dim_question_test {
+  from:  dim_question
+  label: "Robert Test Question Analysis"
 }
