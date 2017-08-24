@@ -1,106 +1,115 @@
 view: responses {
-  sql_table_name: WA2ANALYTICS.RESPONSES ;;
-
-  dimension: id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.ID ;;
-  }
-
-  dimension: attemptnumber {
-    type: number
-    sql: ${TABLE}.ATTEMPTNUMBER ;;
-  }
-
-  dimension: boxnum {
-    type: number
-    sql: ${TABLE}.BOXNUM ;;
-  }
-
-  dimension_group: createdat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.CREATEDAT ;;
-  }
-
-  dimension: iscorrect {
-    type: number
-    sql: ${TABLE}.ISCORRECT ;;
-  }
-
-  measure: numbercorrect {
-    label: "# Correct"
-    type: sum
-    sql: ${TABLE}.ISCORRECT;;
-  }
-
-  measure: percentcorrect {
-    label: "% Correct"
-    type: number
-    sql: ${numbercorrect} / ${count};;
-    value_format_name: percent_1
-  }
-
-  dimension: is_last_attempt {
-    type: yesno
+  #sql_table_name: WA2ANALYTICS.RESPONSES ;;
+  derived_table: {
     sql:
-            row_number() over (partition by ${userid},${questionid},${boxnum}
-                              order by ${attemptnumber} desc) = 1
-         ;;
-  }
+      select
+        *
+        ,row_number() over (partition by responses.USERID,responses.QUESTIONID,responses.BOXNUM
+                              order by responses.ATTEMPTNUMBER desc) as reverse_attemptnumber
+      from WA2ANALYTICS.RESPONSES;;
 
-  dimension: overridescore {
-    type: number
-    sql: ${TABLE}.OVERRIDESCORE ;;
-  }
+      sql_trigger_value: select count(*) from WA2ANALYTICS.RESPONSES ;;
+    }
 
-  dimension: pointsscored {
-    type: number
-    sql: ${TABLE}.POINTSSCORED ;;
-  }
+    dimension: id {
+      primary_key: yes
+      type: number
+      sql: ${TABLE}.ID ;;
+    }
 
-  dimension: questionid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.QUESTIONID ;;
-  }
+    dimension: reverse_attemptnumber {}
 
-  dimension: sectionslessonsid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.SECTIONSLESSONSID ;;
-  }
+    dimension: attemptnumber {
+      type: number
+      sql: ${TABLE}.ATTEMPTNUMBER ;;
+    }
 
-  dimension_group: updatedat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.UPDATEDAT ;;
-  }
+    dimension: boxnum {
+      type: number
+      sql: ${TABLE}.BOXNUM ;;
+    }
 
-  dimension: userid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.USERID ;;
-  }
+    dimension_group: createdat {
+      type: time
+      timeframes: [
+        raw,
+        time,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
+      sql: ${TABLE}.CREATEDAT ;;
+    }
 
-  measure: count {
-    type: count
-    drill_fields: [id]
+    dimension: iscorrect {
+      type: number
+      sql: ${TABLE}.ISCORRECT ;;
+    }
+
+    measure: numbercorrect {
+      label: "# Correct"
+      type: sum
+      sql: ${TABLE}.ISCORRECT;;
+    }
+
+    measure: percentcorrect {
+      label: "% Correct"
+      type: number
+      sql: ${numbercorrect} / ${count};;
+      value_format_name: percent_1
+    }
+
+    dimension: is_last_attempt {
+      type: yesno
+      sql: ${reverse_attemptnumber} = 1 ;;
+    }
+
+    dimension: overridescore {
+      type: number
+      sql: ${TABLE}.OVERRIDESCORE ;;
+    }
+
+    dimension: pointsscored {
+      type: number
+      sql: ${TABLE}.POINTSSCORED ;;
+    }
+
+    dimension: questionid {
+      type: number
+      value_format_name: id
+      sql: ${TABLE}.QUESTIONID ;;
+    }
+
+    dimension: sectionslessonsid {
+      type: number
+      value_format_name: id
+      sql: ${TABLE}.SECTIONSLESSONSID ;;
+    }
+
+    dimension_group: updatedat {
+      type: time
+      timeframes: [
+        raw,
+        time,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
+      sql: ${TABLE}.UPDATEDAT ;;
+    }
+
+    dimension: userid {
+      type: number
+      value_format_name: id
+      sql: ${TABLE}.USERID ;;
+    }
+
+    measure: count {
+      type: count
+      drill_fields: [id]
+    }
   }
-}
