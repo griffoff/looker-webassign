@@ -29,7 +29,16 @@ explore: dim_question {
     relationship: many_to_one
   }
 
+  join: lessonscores{
+    sql_on:  ${lessonscores.lessonid} = ${sectionslessons.lessonid}
+       and ${lessonscores.userid} = ${responses.userid};;
+    relationship: many_to_one
+  }
 
+  join: classstatistics {
+    sql_on:  ${sectionslessons.sectionid} = ${classstatistics.sectionid} ;;
+    relationship:  one_to_one
+  }
 
 
 }
