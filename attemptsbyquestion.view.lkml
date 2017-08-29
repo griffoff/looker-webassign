@@ -1,4 +1,5 @@
 view: attemptsbyquestion {
+  label:"Question - Attempts"
   sql_table_name: WA2ANALYTICS.ATTEMPTSBYQUESTION ;;
 
   dimension: id {
@@ -29,23 +30,29 @@ view: attemptsbyquestion {
   }
 
   dimension: percentcorrect {
+    label: "Percent Correct"
     type: number
     sql: ${TABLE}.PERCENTCORRECT ;;
   }
 
   dimension: questionid {
+    label: "Question ID"
     type: number
     value_format_name: id
     sql: ${TABLE}.QUESTIONID ;;
   }
 
   dimension: sectionid {
+    label: "Section ID"
+    description:"For link to course/section which should link to instition"
     type: number
     value_format_name: id
     sql: ${TABLE}.SECTIONID ;;
   }
 
   dimension: sectionslessonid {
+    label: "Sections Lession ID"
+    description: "Need to confirm what this is"
     type: number
     value_format_name: id
     sql: ${TABLE}.SECTIONSLESSONID ;;
