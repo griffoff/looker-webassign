@@ -1,10 +1,12 @@
 view: attemptsbyquestionbox {
+  label: "Questions (Box) - Attempts"
   sql_table_name: WA2ANALYTICS.ATTEMPTSBYQUESTIONBOX ;;
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.ID ;;
+    hidden: yes
   }
 
   dimension: attemptnumber {
