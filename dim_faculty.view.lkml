@@ -1,4 +1,5 @@
 view: dim_faculty {
+  view_label: "Faculty"
   sql_table_name: WA2ANALYTICS.DIM_FACULTY ;;
 
   dimension: dim_faculty_id {

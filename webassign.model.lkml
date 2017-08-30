@@ -3,11 +3,17 @@ connection: "snowflake_webassign"
 # include all the views
 include: "*.view"
 
+# include dims model
+include: "webassign.dims.model.lkml"
+
 # include all the dashboards
 include: "*.dashboard"
 
+case_sensitive: no
+
 explore: dim_question {
   label: "Question Analysis"
+  extends: [dim_textbook]
 
   join: responses {
     sql_on: ${dim_question.questionid} = ${responses.questionid};;
@@ -29,6 +35,10 @@ explore: dim_question {
     relationship: many_to_one
   }
 
+#   join: dim_faculty {
+#     sql_on: ${sectionslessons.sectionid} = dim_falc ;;
+#   }
+
   join: sectionaveragetaq {
     sql_on: ${responses.sectionslessonsid} = ${sectionaveragetaq.sectionslessonid} ;;
     relationship: many_to_one
@@ -43,6 +53,18 @@ explore: dim_question {
     sql_on:  ${sectionslessons.sectionid} = ${classstatistics.sectionid} ;;
     relationship:  one_to_one
   }
+
+  join: attemptsbyquestion {
+    sql_on: ${attemptsbyquestion.questionid} = ${dim_question.dim_question_id} ;;
+    relationship: many_to_many
+  }
+
+  join: attemptsbyquestionbox {
+    sql_on: ${attemptsbyquestionbox.questionid} = ${dim_question.dim_question_id} ;;
+    relationship: many_to_many
+  }
+
+
 }
 
 

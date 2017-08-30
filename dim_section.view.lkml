@@ -1,4 +1,5 @@
 view: dim_section {
+  view_label: "Section"
   sql_table_name: WA2ANALYTICS.DIM_SECTION ;;
 
   dimension: dim_section_id {

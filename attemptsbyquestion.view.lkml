@@ -1,5 +1,5 @@
 view: attemptsbyquestion {
-  label:"Question - Attempts"
+  view_label:"Question - Attempts"
   sql_table_name: WA2ANALYTICS.ATTEMPTSBYQUESTION ;;
 
   dimension: id {

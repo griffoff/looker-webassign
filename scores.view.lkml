@@ -1,4 +1,5 @@
 view: scores {
+  view_label: "Scores"
   sql_table_name: WA2ANALYTICS.SCORES ;;
 
   dimension: id {

@@ -1,4 +1,5 @@
 view: dim_discipline {
+  view_label: "Discipline"
   sql_table_name: WA2ANALYTICS.DIM_DISCIPLINE ;;
 
   dimension: dim_discipline_id {

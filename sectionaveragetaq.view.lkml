@@ -1,4 +1,5 @@
 view: sectionaveragetaq {
+  view_label: "Average Time"
   sql_table_name: WA2ANALYTICS.SECTIONAVERAGETAQ ;;
 
   dimension: id {

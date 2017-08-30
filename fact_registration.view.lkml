@@ -1,4 +1,5 @@
 view: fact_registration {
+  view_label: "Registrations (Activations)"
   sql_table_name: WA2ANALYTICS.FACT_REGISTRATION ;;
 
   dimension: fact_registration_id {

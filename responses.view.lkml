@@ -1,5 +1,6 @@
 view: responses {
   #sql_table_name: WA2ANALYTICS.RESPONSES ;;
+  view_label: "Responses"
   derived_table: {
     sql:
       select

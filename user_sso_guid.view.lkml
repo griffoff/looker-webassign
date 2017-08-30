@@ -1,5 +1,5 @@
 view: user_sso_guid {
-  label: "User"
+  label: "User - SSO"
   sql_table_name: WA2ANALYTICS.USER_SSO_GUID ;;
 
   dimension: active {
