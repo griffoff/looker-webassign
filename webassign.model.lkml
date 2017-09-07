@@ -72,3 +72,44 @@ explore: dim_question_test {
   from:  dim_question
   label: "Robert Test Question Analysis"
 }
+
+explore: fact_registration {
+  from:  fact_registration
+  label: "Roger Test Registration Analysis"
+
+  join: dim_axscode {
+    sql_on: ${fact_registration.dim_axscode_id} = ${dim_axscode.axscode_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_faculty {
+    sql_on: ${fact_registration.course_instructor_id} = ${dim_faculty.userid}} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_payment_method {
+    sql_on: ${fact_registration.dim_payment_method_id} = ${dim_payment_method.dim_payment_method_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_section {
+    sql_on: ${fact_registration.dim_section_id} = ${dim_section.dim_section_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_school {
+    sql_on: ${fact_registration.dim_school_id} = ${dim_school.dim_school_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_textbook {
+    sql_on: ${fact_registration.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_time {
+    sql_on: ${fact_registration.dim_time_id} = ${dim_time.dim_time_id} ;;
+    relationship: many_to_one
+  }
+
+}
