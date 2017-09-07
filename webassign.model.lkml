@@ -66,16 +66,8 @@ explore: dim_question {
 
 
 }
-
-
-explore: dim_question_test {
-  from:  dim_question
-  label: "Robert Test Question Analysis"
-}
-
 explore: fact_registration {
   from:  fact_registration
-  label: "Roger Test Registration Analysis"
 
   join: dim_axscode {
     sql_on: ${fact_registration.dim_axscode_id} = ${dim_axscode.axscode_id} ;;
@@ -111,5 +103,9 @@ explore: fact_registration {
     sql_on: ${fact_registration.dim_time_id} = ${dim_time.dim_time_id} ;;
     relationship: many_to_one
   }
+}
 
+explore: dim_question_test {
+  from:  dim_question
+  label: "Robert Test Question Analysis"
 }
