@@ -75,7 +75,7 @@ explore: fact_registration {
   }
 
   join: dim_faculty {
-    sql_on: ${fact_registration.course_instructor_id} = ${dim_faculty.userid}} ;;
+    sql_on: ${fact_registration.course_instructor_id} = ${dim_faculty.userid} ;;
     relationship: many_to_one
   }
 
