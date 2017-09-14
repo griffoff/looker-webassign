@@ -16,7 +16,7 @@ explore: dim_question {
   extends: [dim_textbook]
 
   join: responses {
-    sql_on: ${dim_question.questionid} = ${responses.questionid};;
+    sql_on: ${dim_question.dim_question_id} = ${responses.questionid};;
     relationship: one_to_many
   }
 
@@ -64,6 +64,15 @@ explore: dim_question {
     relationship: many_to_many
   }
 
+  join: fact_registration {
+    sql_on: ${fact_registration.user_id} = ${user_sso_guid.userid} ;;
+    relationship: many_to_one
+  }
+
+ join: dim_school {
+    sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
+    relationship: one_to_many
+ }
 
 }
 explore: fact_registration {

@@ -26,6 +26,14 @@ explore: dim_textbook {
   }
 }
 
+explore: user_sso_guid {
+#   from: user_sso_guid
+  extension: required
+  join: fact_registration{
+    sql_on: ${user_sso_guid.userid} = ${fact_registration.user_id}} ;;
+    relationship: one_to_many
+  }
+}
 # explore: dim_faculty {
 #   extension: required
 #   join: dim_school {
