@@ -52,7 +52,7 @@ view: attemptsbyquestion {
 
   dimension: sectionslessonid {
     label: "Sections Lession ID"
-    description: "Need to confirm what this is"
+    description: "Should be assignments - Need to confirm what this is"
     type: number
     value_format_name: id
     sql: ${TABLE}.SECTIONSLESSONID ;;
@@ -72,8 +72,39 @@ view: attemptsbyquestion {
     sql: ${TABLE}.UPDATEDAT ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [id]
+  measure: question_count {
+    label: "Number of questions (distinct)"
+    description: "Distinct quesiton count"
+    type: count_distinct
+    sql: ${questionid} ;;
+    drill_fields: [questionid]
+  }
+
+  measure: total_attempts{
+    label: "Total attempts"
+    description: "Sum of all attempts"
+    type: sum
+    sql: ${attemptnum} ;;
+  }
+
+  measure: Assignment_count{
+    label:"Number of Assignments (distinct)"
+    description: "distint assignment count"
+    type: count_distinct
+    sql: ${sectionslessonid} ;;
+  }
+
+  measure: section_count {
+    label: "Number of course sections (distinct)"
+    description: "Distinct count of course sections"
+    type: count_distinct
+    sql: ${sectionid} ;;
+  }
+
+  measure: sectionlesson_count {
+    label: "Number of Assignments (sectionlessons - distinct)"
+    description: "Distinct count of sectionlesson IDs (assignments)"
+    type: count_distinct
+    sql: ${sectionslessonid};;
   }
 }

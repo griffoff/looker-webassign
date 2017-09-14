@@ -73,4 +73,11 @@ view: user_sso_guid {
     type: count
     drill_fields: []
   }
+
+  measure: institution_count {
+    label: "Number of institutions (distinct)"
+    description: "Distinct institutions with users"
+    type: count_distinct
+    sql: ${school_id};;
+  }
 }
