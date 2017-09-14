@@ -371,6 +371,20 @@ view: dim_section {
     drill_fields: [detail*]
   }
 
+  measure: count_courseinstructors{
+    label: "# of Course Instructors"
+    type: count_distinct
+    description: "The Distinct Count of Course Instructors (Owners). Not always the same as the Section Instructor"
+    sql: ${course_instructor_id} ;;
+  }
+
+  measure: count_sectioninstructors{
+    label: "# of Section Instructors"
+    type: count_distinct
+    description: "The Distinct Count of Section Instructors (The actual instructor teaching the section). Not always the same as the Course Instructor"
+    sql: ${section_instructor_id} ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
