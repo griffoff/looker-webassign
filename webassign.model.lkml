@@ -1,4 +1,4 @@
-connection: "snowflake_webassign"
+#connection: "snowflake_webassign"
 
 # include all the views
 include: "*.view"
@@ -111,6 +111,18 @@ explore: fact_registration {
   join: dim_time {
     sql_on: ${fact_registration.dim_time_id} = ${dim_time.dim_time_id} ;;
     relationship: many_to_one
+  }
+}
+explore: responsesseedsample {
+  from:  responsesseedsample
+
+  join: responses {
+    sql_on: ${responsesseedsample.sectionslessonsid} = ${responses.sectionslessonsid}
+          and ${responsesseedsample.userid} = ${responses.userid}
+          and ${responsesseedsample.questionid} = ${responses.questionid}
+          and ${responsesseedsample.boxnum} = ${responses.boxnum}
+          and ${responsesseedsample.attemptnumber} = ${responses.attemptnumber};;
+    relationship: one_to_one
   }
 }
 
