@@ -124,6 +124,14 @@ explore: responsesseedsample {
           and ${responsesseedsample.attemptnumber} = ${responses.attemptnumber};;
     relationship: one_to_one
   }
+  join: sectionslessons {
+    sql_on: ${responses.sectionslessonsid} = ${sectionslessons.id} ;;
+    relationship: many_to_one
+  }
+  join: dim_question {
+    sql_on: ${dim_question.dim_question_id} = ${responses.questionid};;
+    relationship: one_to_many
+  }
 }
 
 explore: dim_question_test {
