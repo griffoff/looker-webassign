@@ -134,6 +134,15 @@ explore: responsesseedsample {
   }
 }
 
+explore: questionstext {
+  from:  questionstext
+
+  join: dim_question {
+    sql_on: ${dim_question.dim_question_id} = ${questionstext.questionid};;
+    relationship: one_to_one
+  }
+}
+
 explore: dim_question_test {
   from:  dim_question
   label: "Robert Test Question Analysis"
