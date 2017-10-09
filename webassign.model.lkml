@@ -141,6 +141,10 @@ explore: questionstext {
     sql_on: ${dim_question.dim_question_id} = ${questionstext.questionid};;
     relationship: one_to_one
   }
+  join: dim_textbook {
+    sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: dim_question_test {
