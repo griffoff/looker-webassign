@@ -111,6 +111,65 @@ view: dim_question {
     sql: ${TABLE}.DISTINCT_MODES ;;
   }
 
+  dimension: Features {
+    type: string
+    label: "Question feature list"
+    case: {
+      when: {
+        sql: ${has_ebook_section} = 'Yes' ;;
+        label: "Ebook"
+      }
+      when: {
+        sql: ${has_feedback} = 'Yes' ;;
+        label: "Feedback"
+      }
+    when: {
+        sql: ${has_grading_statement} = 'Yes' ;;
+        label: "Grading Statement"
+      }
+    when: {
+        sql: ${has_image} = 'Yes' ;;
+        label: "Image"
+      }
+    when: {
+        sql: ${has_marvin} = 'Yes' ;;
+        label: "Marvin"
+      }
+      when: {
+        sql: ${has_master_it} = 'Yes' ;;
+        label: "Master It"
+      }
+      when: {
+        sql: ${has_pad} = 'Yes' ;;
+        label: "Pad"
+      }
+      when: {
+        sql: ${has_practice_it} = 'Yes' ;;
+        label: "Practice"
+      }
+      when: {
+        sql: {has_read_it} = 'Yes' ;;
+        label: "Read It"
+      }
+      when: {
+        sql: ${has_solution} = 'Yes' ;;
+        label: "Solution"
+      }
+      when: {
+        sql: ${has_tutorial} = 'Yes' ;;
+        label: "Tutorial"
+      }
+      when: {
+        sql: ${has_tutorial_popup} = 'Yes' ;;
+        label: "Tutorial Popup"
+      }
+      when: {
+        sql: ${has_watch_it} = 'Yes' ;;
+        label: "Watch It"
+      }
+    }
+  }
+
   dimension: has_ebook_section {
     type: yesno
     sql: ${TABLE}.HAS_EBOOK_SECTION ;;
@@ -358,5 +417,10 @@ view: dim_question {
   measure: count {
     type: count
     drill_fields: [all*]
+  }
+  measure: count_questions {
+    type: count_distinct
+    description: "# of questions"
+    sql: ${dim_question_id} ;;
   }
 }
