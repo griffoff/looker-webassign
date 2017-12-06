@@ -148,7 +148,7 @@ view: dim_question {
         label: "Practice"
       }
       when: {
-        sql: {has_read_it} = 'Yes' ;;
+        sql: ${has_read_it} = 'Yes' ;;
         label: "Read It"
       }
       when: {
