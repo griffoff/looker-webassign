@@ -14,6 +14,8 @@ view: dim_school {
   }
 
   dimension: bb_version {
+    label: "Blackboard Version"
+    description: "The Blackboard version used by the school. i.e. 1.0, 2.0, 2.13"
     type: string
     sql: ${TABLE}.BB_VERSION ;;
   }
@@ -142,11 +144,15 @@ view: dim_school {
   }
 
   dimension: price_category {
+    label: "School Price Category Code"
+    description: "1 = High School, 2 = Quarter, & 3 = Semester"
     type: number
     sql: ${TABLE}.PRICE_CATEGORY ;;
   }
 
   dimension: price_category_desc {
+    label: "School Price Category Description"
+    description: "Highschool, Quarter, or Semester"
     type: string
     sql: ${TABLE}.PRICE_CATEGORY_DESC ;;
   }
@@ -207,6 +213,8 @@ view: dim_school {
   }
 
   dimension: type {
+    label: "School Type"
+    description: "University, Community College, High School, Middle School, etc"
     type: string
     sql: ${TABLE}.TYPE ;;
   }

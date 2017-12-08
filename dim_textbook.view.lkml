@@ -14,11 +14,14 @@ view: dim_textbook {
   }
 
   dimension: available {
+    description: "These designations control the availability of the textbook in WebAssign and visibility on the info site. Possible values are: New, Coming Soon, Available, Old Edition, Hidden, Canceled"
     type: string
     sql: ${TABLE}.AVAILABLE ;;
   }
 
   dimension: code {
+    label: "Product Code"
+    description: "The WebAssign equivalent to Product Family Code. Unique code by product and edition"
     type: string
     sql: ${TABLE}.CODE ;;
   }
@@ -127,11 +130,13 @@ view: dim_textbook {
   }
 
   dimension: permission {
+    description: "Textbook Permission: Restricted or Open. Copyrighted textbooks are typically designated as Restricted. Open textbooks can be used in a class without incurring additional fees. "
     type: string
     sql: ${TABLE}.PERMISSION ;;
   }
 
   dimension: price_category {
+    description: "The price category of the textbook at the time of purchase. Also known as the 'Content Subtype'"
     type: string
     sql: ${TABLE}.PRICE_CATEGORY ;;
   }

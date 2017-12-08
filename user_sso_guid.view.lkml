@@ -75,7 +75,7 @@ view: user_sso_guid {
   }
 
   measure: institution_count {
-    label: "Number of institutions (distinct)"
+    label: "Number of Institutions (distinct)"
     description: "Distinct institutions with users"
     type: count_distinct
     sql: ${school_id};;

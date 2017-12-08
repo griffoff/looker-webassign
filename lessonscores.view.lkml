@@ -1,4 +1,5 @@
 view: lessonscores {
+  view_label: "Lesson Scores"
   sql_table_name: WA2ANALYTICS.LESSONSCORES ;;
 
   dimension: id {
@@ -27,11 +28,13 @@ view: lessonscores {
   }
 
   dimension: questionsasked {
+    label: "Questions Asked"
     type: number
     sql: ${TABLE}.QUESTIONSASKED ;;
   }
 
   dimension: questionscorrect {
+    label: "Questions Correct"
     type: number
     sql: ${TABLE}.QUESTIONSCORRECT ;;
   }

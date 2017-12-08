@@ -20,19 +20,24 @@ view: responses {
       sql: ${TABLE}.ID ;;
     }
 
-    dimension: reverse_attemptnumber {}
+    dimension: reverse_attemptnumber {
+      label: "Reverse Attempt Number"
+    }
 
     dimension: attemptnumber {
+      label: "Attempt Number"
       type: number
       sql: ${TABLE}.ATTEMPTNUMBER ;;
     }
 
     dimension: boxnum {
+      label: "Box Num"
       type: number
       sql: ${TABLE}.BOXNUM ;;
     }
 
     dimension_group: createdat {
+      label: "Create"
       type: time
       timeframes: [
         raw,
@@ -47,6 +52,7 @@ view: responses {
     }
 
     dimension: iscorrect {
+      label: "Is Correct"
       type: number
       sql: ${TABLE}.ISCORRECT ;;
     }
@@ -76,28 +82,33 @@ view: responses {
     }
 
     dimension: overridescore {
+      label: "Override Score"
       type: number
       sql: ${TABLE}.OVERRIDESCORE ;;
     }
 
     dimension: pointsscored {
+      label: "Points Scored"
       type: number
       sql: ${TABLE}.POINTSSCORED ;;
     }
 
     dimension: questionid {
+      label: "Question ID"
       type: number
       value_format_name: id
       sql: ${TABLE}.QUESTIONID ;;
     }
 
     dimension: sectionslessonsid {
+      label: "Section Lessons ID"
       type: number
       value_format_name: id
       sql: ${TABLE}.SECTIONSLESSONSID ;;
     }
 
     dimension_group: updatedat {
+      label: "Update"
       type: time
       timeframes: [
         raw,
@@ -112,6 +123,7 @@ view: responses {
     }
 
     dimension: userid {
+      label: "User ID"
       hidden: yes
       type: number
       value_format_name: id

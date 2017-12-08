@@ -112,6 +112,7 @@ view: dim_question {
   }
 
   dimension: Features {
+    group_label: "Question Attributes"
     type: string
     label: "Question feature list"
     case: {
@@ -171,102 +172,122 @@ view: dim_question {
   }
 
   dimension: has_ebook_section {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_EBOOK_SECTION ;;
   }
 
   dimension: has_feedback {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_FEEDBACK ;;
   }
 
   dimension: has_grading_statement {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_GRADING_STATEMENT ;;
   }
 
   dimension: has_image {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_IMAGE ;;
   }
 
   dimension: has_marvin {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_MARVIN ;;
   }
 
   dimension: has_master_it {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_MASTER_IT ;;
   }
 
   dimension: has_pad {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_PAD ;;
   }
 
   dimension: has_practice_it {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_PRACTICE_IT ;;
   }
 
   dimension: has_read_it {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_READ_IT ;;
   }
 
   dimension: has_solution {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_SOLUTION ;;
   }
 
   dimension: has_standalone_master_it {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_STANDALONE_MASTER_IT ;;
   }
 
   dimension: has_tutorial {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_TUTORIAL ;;
   }
 
   dimension: has_tutorial_popup {
+    group_label: "Question Attributes"
     description: "Has a Tutorial PopUp"
     type: yesno
     sql: ${TABLE}.HAS_TUTORIAL_POPUP ;;
   }
 
   dimension: has_watch_it {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.HAS_WATCH_IT ;;
   }
 
   dimension: is_included_in_psp_quiz {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_INCLUDED_IN_PSP_QUIZ ;;
   }
 
   dimension: is_locked_scheduled {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_LOCKED_SCHEDULED ;;
   }
 
   dimension: is_randomized {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_RANDOMIZED ;;
   }
 
   dimension: is_trashed {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_TRASHED ;;
   }
 
   dimension: is_useable {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_USEABLE ;;
   }
 
   dimension: is_webassign_author {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.IS_WEBASSIGN_AUTHOR ;;
   }
@@ -311,41 +332,49 @@ view: dim_question {
   }
 
   dimension: qdiff_difficulty_index {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_DIFFICULTY_INDEX ;;
   }
 
   dimension: qdiff_num_attempts {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_NUM_ATTEMPTS ;;
   }
 
   dimension: qdiff_pct_correct_additional {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ADDITIONAL ;;
   }
 
   dimension: qdiff_pct_correct_attempt_1 {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ATTEMPT_1 ;;
   }
 
   dimension: qdiff_pct_correct_attempt_2 {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ATTEMPT_2 ;;
   }
 
   dimension: qdiff_pct_correct_attempt_3 {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ATTEMPT_3 ;;
   }
 
   dimension: qdiff_pct_correct_attempt_4 {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ATTEMPT_4 ;;
   }
 
   dimension: qdiff_pct_correct_attempt_5 {
+    group_label: "Question Difficulty"
     type: number
     sql: ${TABLE}.QDIFF_PCT_CORRECT_ATTEMPT_5 ;;
   }
@@ -356,6 +385,7 @@ view: dim_question {
   }
 
   dimension: question_mode {
+    group_label: "Question Attributes"
     type: string
     sql: ${TABLE}.QUESTION_MODE;;
   }
@@ -367,16 +397,19 @@ view: dim_question {
   }
 
   dimension: req_flash {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.REQ_FLASH ;;
   }
 
   dimension: req_java {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.REQ_JAVA ;;
   }
 
   dimension: req_question_part_submission {
+    group_label: "Question Attributes"
     type: yesno
     sql: ${TABLE}.REQ_QUESTION_PART_SUBMISSION ;;
   }
@@ -388,12 +421,16 @@ view: dim_question {
   }
 
   dimension: taq_avg_time {
+    label: "Question Take Time (Avg.)"
+    description: "The average time needed to answer a question. (TAQ) average time"
     type: number
     sql: ${taq_avg_time_secs} / 60 / 60 / 24;;
     value_format: "m \m\i\n s \s\e\c\s"
   }
 
   dimension: taq_med_time {
+    label: "Question Take Time (Med.)"
+    description: "The median time needed to answer a question. (TAQ) med time"
     type: number
     sql: ${TABLE}.TAQ_MED_TIME ;;
   }

@@ -1,4 +1,5 @@
 view: classstatistics {
+  view_label: "Class Statistics"
   sql_table_name: WA2ANALYTICS.CLASSSTATISTICS ;;
 
   dimension: firstquartile {

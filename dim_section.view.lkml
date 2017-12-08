@@ -9,6 +9,7 @@ view: dim_section {
   }
 
   dimension: bb_version {
+    label: "Blackboard Version"
     type: string
     sql: ${TABLE}.BB_VERSION ;;
   }
@@ -68,6 +69,8 @@ view: dim_section {
   }
 
   dimension: billing {
+    label: "Billing Method"
+    description: "The billing method for the section. Ex: Student Access codes, Bill Institution, Free Trial, etc."
     type: string
     sql: ${TABLE}.BILLING ;;
   }
@@ -93,11 +96,13 @@ view: dim_section {
   }
 
   dimension: course_instructor_id {
+    description: "Course Owner (not necessarily the person teaching the section)"
     type: number
     sql: ${TABLE}.COURSE_INSTRUCTOR_ID ;;
   }
 
   dimension: course_instructor_name {
+    description: "Course Owner (not necessarily the person teaching the section)"
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_NAME ;;
   }
@@ -200,6 +205,7 @@ view: dim_section {
   }
 
   dimension_group: ends_eastern {
+    description: "Current End Date given by instructor. This date can change"
     type: time
     timeframes: [
       raw,
@@ -214,26 +220,35 @@ view: dim_section {
   }
 
   dimension: gb_configured {
+    label: "Section Gradebook Configured?"
+    description: "Section has Gradebook initialized and configured for use"
     type: yesno
     sql: ${TABLE}.GB_CONFIGURED ;;
   }
 
   dimension: gb_has_data {
+    label: "Section Gradebook Has Data?"
+    description: "GradeBook has at least one student with a non-zero average in at least one GradeBook Category"
     type: yesno
     sql: ${TABLE}.GB_HAS_DATA ;;
   }
 
   dimension: granted_ebook {
+    label: "Section Granted Ebook?"
+    description: "Was this section granted eBook access? Valid only for sections where billing type is not 'Student Access Codes'"
     type: string
     sql: ${TABLE}.GRANTED_EBOOK ;;
   }
 
   dimension: has_invoice {
+    label: "Section Has Invoice?"
+    description: "Is there an invoice number for this section?"
     type: yesno
     sql: ${TABLE}.HAS_INVOICE ;;
   }
 
   dimension_group: leeway_eastern {
+    description: "The Leeway Date marks the end of the student grace period. It is 2 weeks after the initial Start Date chosen by the instructor. The Census Date is two weeks after the Leeway Date, except in June and July when the Census Date is the same as the Leeway Date"
     type: time
     timeframes: [
       raw,
@@ -253,6 +268,8 @@ view: dim_section {
   }
 
   dimension: psp_enabled {
+    label: "Section PSP Enabled?"
+    description: "PSP is turned on for the class. Values are 'Yes', 'No', or 'n/a' if the Textbook does not have an active PSP component."
     type: string
     sql: ${TABLE}.PSP_ENABLED ;;
   }
@@ -273,11 +290,13 @@ view: dim_section {
   }
 
   dimension: registrations {
+    description: "The # of Student Activations"
     type: number
     sql: ${TABLE}.REGISTRATIONS ;;
   }
 
   dimension: roster {
+    description: "The # of Students Enrolled"
     type: number
     sql: ${TABLE}.ROSTER ;;
   }
@@ -298,11 +317,13 @@ view: dim_section {
   }
 
   dimension: section_instructor_id {
+    description: "The actual person teaching the section. May or may not be the Course Owner/Instructor"
     type: number
     sql: ${TABLE}.SECTION_INSTRUCTOR_ID ;;
   }
 
   dimension: section_instructor_name {
+    description: "The actual person teaching the section. May or may not be the Course Owner/Instructor"
     type: string
     sql: ${TABLE}.SECTION_INSTRUCTOR_NAME ;;
   }
@@ -323,6 +344,7 @@ view: dim_section {
   }
 
   dimension_group: starts_eastern {
+    description: "The current Start Date as given by the instructor. This date can change."
     type: time
     timeframes: [
       raw,
@@ -337,11 +359,13 @@ view: dim_section {
   }
 
   dimension: term {
+    description: "The term given to the class by the instructor. i.e. Spring, Summer, Fall. For High Schools this is often the year."
     type: string
     sql: ${TABLE}.TERM ;;
   }
 
   dimension: term_description {
+    description: "The term given to the class by the instructor. i.e. Spring, Summer, Fall. For High Schools this is often the year."
     type: string
     sql: ${TABLE}.TERM_DESCRIPTION ;;
   }

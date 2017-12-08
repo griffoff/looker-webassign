@@ -29,6 +29,7 @@ view: fact_registration {
   }
 
   dimension: dim_payment_method_id {
+    description: "How the student gained access. Payment method regardless if a revenue type (access code, multi-term, etc.) or a no revenue type (free trial, LOE Reuse)."
     type: number
     sql: ${TABLE}.DIM_PAYMENT_METHOD_ID ;;
   }
@@ -55,11 +56,13 @@ view: fact_registration {
   }
 
   dimension: event_type {
+    description: "To denote if measures from sales are for purchase or refund"
     type: string
     sql: ${TABLE}.EVENT_TYPE ;;
   }
 
   dimension: purchase_type {
+    description: "'Upgrade' for eBook upgrades, 'Registration' for purchases that gave access to a section, 'Fee' for extra fees the student was forced to pay (the result of a bug)"
     type: string
     sql: ${TABLE}.PURCHASE_TYPE ;;
   }
@@ -70,6 +73,7 @@ view: fact_registration {
   }
 
   dimension: registrations {
+    description: "Registrations = # of student activations. Roster = # students enrolled in a course"
     type: number
     sql: ${TABLE}.REGISTRATIONS ;;
   }
@@ -100,6 +104,7 @@ view: fact_registration {
   }
 
   dimension: upgrades {
+    description: "The number of eBook upgrades"
     type: number
     sql: ${TABLE}.UPGRADES ;;
   }

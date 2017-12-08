@@ -4,6 +4,7 @@ view: attemptsbyquestion {
 
   dimension: id {
     primary_key: yes
+    label: "Attempt ID"
     type: number
     sql: ${TABLE}.ID ;;
   }
@@ -16,6 +17,7 @@ view: attemptsbyquestion {
   }
 
   dimension_group: createdat {
+    label: "Created"
     type: time
     timeframes: [
       raw,
@@ -59,6 +61,7 @@ view: attemptsbyquestion {
   }
 
   dimension_group: updatedat {
+    label: "Update"
     type: time
     timeframes: [
       raw,

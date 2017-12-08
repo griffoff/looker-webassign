@@ -8,6 +8,7 @@ view: dim_payment_method {
   }
 
   dimension: category {
+    description: "Groups payment methods into 3 categories: Revenue, No Revenue, and Other"
     type: string
     sql: ${TABLE}.CATEGORY ;;
   }

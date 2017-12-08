@@ -58,7 +58,7 @@ view: attemptsbyquestionbox {
 
   dimension: sectionslessonid {
     label: "Section Lesson ID"
-    description: "Need to figure out what this is"
+    description: "Assignment ID"
     type: number
     value_format_name: id
     sql: ${TABLE}.SECTIONSLESSONID ;;
@@ -82,4 +82,5 @@ view: attemptsbyquestionbox {
     type: count
     drill_fields: [id]
   }
+
 }
