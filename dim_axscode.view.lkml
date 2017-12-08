@@ -78,6 +78,7 @@ view: dim_axscode {
   }
 
   dimension: prefix {
+    description: "The Access Code Prefix (EWA-STB, WebAssign-S, etc)"
     type: string
     sql: ${TABLE}.PREFIX ;;
   }
