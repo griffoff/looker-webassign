@@ -30,42 +30,8 @@ explore: dim_question {
     relationship: many_to_one
   }
 
-  join: sectionslessons {
-    sql_on: ${responses.sectionslessonsid} = ${sectionslessons.id} ;;
-    relationship: many_to_one
-  }
-
-#   join: dim_faculty {
-#     sql_on: ${sectionslessons.sectionid} = dim_falc ;;
-#   }
-
-  join: sectionaveragetaq {
-    sql_on: ${responses.sectionslessonsid} = ${sectionaveragetaq.sectionslessonid} ;;
-    relationship: many_to_one
-  }
-  join: lessonscores{
-    sql_on:  ${lessonscores.lessonid} = ${sectionslessons.lessonid}
-       and ${lessonscores.userid} = ${responses.userid};;
-    relationship: many_to_one
-  }
-
-  join: classstatistics {
-    sql_on:  ${sectionslessons.sectionid} = ${classstatistics.sectionid} ;;
-    relationship:  one_to_one
-  }
-
-  join: attemptsbyquestion {
-    sql_on: ${attemptsbyquestion.questionid} = ${dim_question.dim_question_id} ;;
-    relationship: many_to_many
-  }
-
-  join: attemptsbyquestionbox {
-    sql_on: ${attemptsbyquestionbox.questionid} = ${dim_question.dim_question_id} ;;
-    relationship: many_to_many
-  }
-
-  join: fact_registration {
-    sql_on: ${fact_registration.user_id} = ${user_sso_guid.userid} ;;
+  join: dim_deployment {
+    sql_on: ${responses.sectionslessonsid} = ${dim_deployment.deployment_id} ;;
     relationship: many_to_one
   }
 
