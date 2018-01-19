@@ -16,7 +16,7 @@ explore: responses {
   from: responses
 
   join: dim_question {
-    sql_on: ${responses.questionid} = ${dim_question.questionid} ;;
+    sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
     relationship: many_to_one
   }
 

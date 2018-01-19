@@ -390,10 +390,10 @@ view: dim_question {
     sql: ${TABLE}.QUESTION_MODE;;
   }
 
-  dimension: questionid {
+  dimension: question_id {
     type: number
     value_format_name: id
-    sql: ${TABLE}.QUESTIONID ;;
+    sql: ${TABLE}.QUESTION_ID ;;
   }
 
   dimension: req_flash {
