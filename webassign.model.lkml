@@ -11,13 +11,13 @@ include: "*.dashboard"
 
 case_sensitive: no
 
-explore: dim_question {
-  label: "Question Analysis"
-  extends: [dim_textbook]
+explore: responses {
+  label: "Sudent Take Analysis"
+  from: responses
 
-  join: responses {
-    sql_on: ${dim_question.dim_question_id} = ${responses.questionid};;
-    relationship: one_to_many
+  join: dim_question {
+    sql_on: ${responses.questionid} = ${dim_question.questionid} ;;
+    relationship: many_to_one
   }
 
   join: dim_textbook {
@@ -25,14 +25,25 @@ explore: dim_question {
     relationship: many_to_one
   }
 
-  join: user_sso_guid {
-    sql_on: ${responses.userid} = ${user_sso_guid.userid} ;;
+  join: dim_deployment {
+    sql_on: ${responses.sectionslessonsid} = ${dim_deployment.deployment_id};;
     relationship: many_to_one
   }
 
-  join: dim_deployment {
-    sql_on: ${responses.sectionslessonsid} = ${dim_deployment.deployment_id} ;;
+  join: dim_section {
+    sql_on: ${dim_deployment.section_id} = ${dim_section.section_id};;
     relationship: many_to_one
+  }
+
+  join: roster {
+    sql_on: ${roster.section} = ${dim_deployment.section_id}
+    and ${roster.user} = ${responses.userid};;
+    relationship: one_to_many
+  }
+
+  join: user_sso_guid {
+    sql_on: ${responses.userid} = ${user_sso_guid.userid} ;;
+    relationship: one_to_many
   }
 
  join: dim_school {
