@@ -38,17 +38,17 @@ explore: responses {
   join: roster {
     sql_on: ${roster.section} = ${dim_deployment.section_id}
     and ${roster.user} = ${responses.userid};;
-    relationship: one_to_many
+    relationship: many_to_one
   }
 
   join: user_sso_guid {
     sql_on: ${responses.userid} = ${user_sso_guid.userid} ;;
-    relationship: one_to_many
+    relationship: many_to_one
   }
 
  join: dim_school {
     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
-    relationship: one_to_many
+    relationship: many_to_one
  }
 
 }
