@@ -125,11 +125,6 @@ explore: questionstext {
   }
 }
 
-explore: dim_question_test {
-  from:  dim_question
-  label: "Robert Test Question Analysis"
-}
-
 explore: footprints {
   label: "Testing footprints"
 }
