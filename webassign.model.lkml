@@ -53,7 +53,7 @@ explore: responses {
 
 }
 explore: fact_registration {
-  from:  fact_registration
+  label: "Activations"
 
   join: dim_axscode {
     sql_on: ${fact_registration.dim_axscode_id} = ${dim_axscode.axscode_id} ;;
@@ -88,6 +88,7 @@ explore: fact_registration {
   join: dim_time {
     sql_on: ${fact_registration.dim_time_id} = ${dim_time.dim_time_id} ;;
     relationship: many_to_one
+    type: inner
   }
 }
 explore: responsesseedsample {
@@ -127,4 +128,8 @@ explore: questionstext {
 explore: dim_question_test {
   from:  dim_question
   label: "Robert Test Question Analysis"
+}
+
+explore: footprints {
+  label: "Testing footprints"
 }

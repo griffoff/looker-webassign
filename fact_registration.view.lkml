@@ -122,7 +122,9 @@ view: fact_registration {
   measure: user_registrations {
     label: "Number of Registrations (activations)"
     description: "Total Activations"
-    type: count
+    type: sum
+    sql: ${registrations} ;;
+
     drill_fields: [detail*]
   }
 

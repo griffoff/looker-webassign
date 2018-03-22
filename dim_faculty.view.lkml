@@ -151,7 +151,7 @@ view: dim_faculty {
   dimension: userid {
     type: number
     value_format_name: id
-    sql: ${TABLE}.USERID ;;
+    sql: ${TABLE}.USER_ID ;;
   }
 
   dimension: username {
