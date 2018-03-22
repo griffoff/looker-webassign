@@ -1,5 +1,5 @@
 view: dim_deployment {
-  sql_table_name: WA2ANALYTICS.DIM_DEPLOYMENT ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT ;;
 
   dimension: dim_deployment_id {
     primary_key: yes

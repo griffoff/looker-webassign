@@ -1,6 +1,6 @@
 view: dim_discipline {
   view_label: "Discipline"
-  sql_table_name: WA2ANALYTICS.DIM_DISCIPLINE ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_DISCIPLINE ;;
 
   dimension: dim_discipline_id {
     primary_key: yes

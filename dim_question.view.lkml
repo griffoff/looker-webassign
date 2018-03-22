@@ -1,6 +1,6 @@
 view: dim_question {
   view_label: "Question"
-  sql_table_name: WA2ANALYTICS.DIM_QUESTION ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_QUESTION ;;
 
   set: all {fields:[dim_question_id, dim_textbook.dim_textbook_id, dim_textbook.name, dim_textbook.publisher_name]}
 

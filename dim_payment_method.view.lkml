@@ -1,5 +1,5 @@
 view: dim_payment_method {
-  sql_table_name: WA2ANALYTICS.DIM_PAYMENT_METHOD ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_PAYMENT_METHOD ;;
 
   dimension: dim_payment_method_id {
     primary_key: yes

@@ -1,6 +1,6 @@
 view: dim_school {
   view_label: "School"
-  sql_table_name: WA2ANALYTICS.DIM_SCHOOL ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_SCHOOL ;;
 
   dimension: dim_school_id {
     primary_key: yes

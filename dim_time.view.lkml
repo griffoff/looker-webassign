@@ -1,5 +1,5 @@
 view: dim_time {
-  sql_table_name: WA2ANALYTICS.DIM_TIME ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_TIME ;;
 
   dimension: dim_time_id {
     primary_key: yes

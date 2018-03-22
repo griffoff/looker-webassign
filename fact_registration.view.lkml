@@ -1,6 +1,6 @@
 view: fact_registration {
   view_label: "Registrations (Activations)"
-  sql_table_name: WA2ANALYTICS.FACT_REGISTRATION ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.FACT_REGISTRATION ;;
 
   dimension: fact_registration_id {
     primary_key: yes

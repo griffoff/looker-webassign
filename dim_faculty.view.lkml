@@ -1,6 +1,6 @@
 view: dim_faculty {
   view_label: "Faculty"
-  sql_table_name: WA2ANALYTICS.DIM_FACULTY ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_FACULTY ;;
 
   dimension: dim_faculty_id {
     primary_key: yes

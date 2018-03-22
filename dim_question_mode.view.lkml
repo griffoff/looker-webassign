@@ -1,5 +1,5 @@
 view: dim_question_mode {
-  sql_table_name: WA2ANALYTICS.DIM_QUESTION_MODE ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_QUESTION_MODE ;;
 
   dimension: dim_question_mode_id {
     primary_key: yes

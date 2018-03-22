@@ -1,6 +1,6 @@
 view: dim_section {
   view_label: "Section"
-  sql_table_name: WA2ANALYTICS.DIM_SECTION ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION ;;
 
   dimension: dim_section_id {
     primary_key: yes
