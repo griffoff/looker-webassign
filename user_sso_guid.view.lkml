@@ -1,6 +1,6 @@
 view: user_sso_guid {
   label: "User - SSO"
-  sql_table_name: WA2ANALYTICS.USER_SSO_GUID ;;
+  sql_table_name: wa_app_v4net.users ;;
 
   dimension: active {
     label: "Is Active (yes/no)"

@@ -19,6 +19,10 @@ explore: responses {
     sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
     relationship: many_to_one
   }
+  join: dim_question_mode {
+    sql_on: ${dim_question.dim_question_id} = ${dim_question_mode.dim_question_mode_id};;
+    relationship: one_to_many
+  }
 
   join: dim_textbook {
     sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
@@ -41,15 +45,15 @@ explore: responses {
     relationship: many_to_one
   }
 
-  join: user_sso_guid {
-    sql_on: ${responses.userid} = ${user_sso_guid.userid} ;;
+  join: users {
+    sql_on: ${responses.userid} = ${users.id} ;;
     relationship: many_to_one
   }
 
- join: dim_school {
-    sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
-    relationship: many_to_one
- }
+#  join: dim_school {
+#     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
+#     relationship: many_to_one
+#  }
 
 }
 explore: fact_registration {
@@ -109,7 +113,13 @@ explore: responsesseedsample {
   join: dim_question {
     sql_on: ${dim_question.dim_question_id} = ${responses.questionid};;
     relationship: one_to_many
+    type: inner
   }
+  join: dim_question_mode {
+    sql_on: ${dim_question.dim_question_id} = ${dim_question_mode.dim_question_mode_id};;
+    relationship: one_to_many
+  }
+
 }
 
 explore: questionstext {
