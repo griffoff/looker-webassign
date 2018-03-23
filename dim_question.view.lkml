@@ -111,184 +111,184 @@ view: dim_question {
     sql: ${TABLE}.DISTINCT_MODES ;;
   }
 
-  dimension: Features {
-    group_label: "Question Attributes"
-    type: string
-    label: "Question feature list"
-    case: {
-      when: {
-        sql: ${has_ebook_section} = 'Yes' ;;
-        label: "Ebook"
-      }
-      when: {
-        sql: ${has_feedback} = 'Yes' ;;
-        label: "Feedback"
-      }
-    when: {
-        sql: ${has_grading_statement} = 'Yes' ;;
-        label: "Grading Statement"
-      }
-    when: {
-        sql: ${has_image} = 'Yes' ;;
-        label: "Image"
-      }
-    when: {
-        sql: ${has_marvin} = 'Yes' ;;
-        label: "Marvin"
-      }
-      when: {
-        sql: ${has_master_it} = 'Yes' ;;
-        label: "Master It"
-      }
-      when: {
-        sql: ${has_pad} = 'Yes' ;;
-        label: "Pad"
-      }
-      when: {
-        sql: ${has_practice_it} = 'Yes' ;;
-        label: "Practice"
-      }
-      when: {
-        sql: ${has_read_it} = 'Yes' ;;
-        label: "Read It"
-      }
-      when: {
-        sql: ${has_solution} = 'Yes' ;;
-        label: "Solution"
-      }
-      when: {
-        sql: ${has_tutorial} = 'Yes' ;;
-        label: "Tutorial"
-      }
-      when: {
-        sql: ${has_tutorial_popup} = 'Yes' ;;
-        label: "Tutorial Popup"
-      }
-      when: {
-        sql: ${has_watch_it} = 'Yes' ;;
-        label: "Watch It"
-      }
-    }
-  }
+#   dimension: Features {
+#     group_label: "Question Attributes"
+#     type: string
+#     label: "Question feature list"
+#     case: {
+#       when: {
+#         sql: ${has_ebook_section} = 'Yes' ;;
+#         label: "Ebook"
+#       }
+#       when: {
+#         sql: ${has_feedback} = 'Yes' ;;
+#         label: "Feedback"
+#       }
+#     when: {
+#         sql: ${has_grading_statement} = 'Yes' ;;
+#         label: "Grading Statement"
+#       }
+#     when: {
+#         sql: ${has_image} = 'Yes' ;;
+#         label: "Image"
+#       }
+#     when: {
+#         sql: ${has_marvin} = 'Yes' ;;
+#         label: "Marvin"
+#       }
+#       when: {
+#         sql: ${has_master_it} = 'Yes' ;;
+#         label: "Master It"
+#       }
+#       when: {
+#         sql: ${has_pad} = 'Yes' ;;
+#         label: "Pad"
+#       }
+#       when: {
+#         sql: ${has_practice_it} = 'Yes' ;;
+#         label: "Practice"
+#       }
+#       when: {
+#         sql: ${has_read_it} = 'Yes' ;;
+#         label: "Read It"
+#       }
+#       when: {
+#         sql: ${has_solution} = 'Yes' ;;
+#         label: "Solution"
+#       }
+#       when: {
+#         sql: ${has_tutorial} = 'Yes' ;;
+#         label: "Tutorial"
+#       }
+#       when: {
+#         sql: ${has_tutorial_popup} = 'Yes' ;;
+#         label: "Tutorial Popup"
+#       }
+#       when: {
+#         sql: ${has_watch_it} = 'Yes' ;;
+#         label: "Watch It"
+#       }
+#     }
+#   }
 
   dimension: has_ebook_section {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_EBOOK_SECTION ;;
   }
 
   dimension: has_feedback {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_FEEDBACK ;;
   }
 
   dimension: has_grading_statement {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_GRADING_STATEMENT ;;
   }
 
   dimension: has_image {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_IMAGE ;;
   }
 
   dimension: has_marvin {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_MARVIN ;;
   }
 
   dimension: has_master_it {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_MASTER_IT ;;
   }
 
   dimension: has_pad {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_PAD ;;
   }
 
   dimension: has_practice_it {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_PRACTICE_IT ;;
   }
 
   dimension: has_read_it {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_READ_IT ;;
   }
 
   dimension: has_solution {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_SOLUTION ;;
   }
 
   dimension: has_standalone_master_it {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_STANDALONE_MASTER_IT ;;
   }
 
   dimension: has_tutorial {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_TUTORIAL ;;
   }
 
   dimension: has_tutorial_popup {
     group_label: "Question Attributes"
     description: "Has a Tutorial PopUp"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_TUTORIAL_POPUP ;;
   }
 
   dimension: has_watch_it {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.HAS_WATCH_IT ;;
   }
 
   dimension: is_included_in_psp_quiz {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_INCLUDED_IN_PSP_QUIZ ;;
   }
 
   dimension: is_locked_scheduled {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_LOCKED_SCHEDULED ;;
   }
 
   dimension: is_randomized {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_RANDOMIZED ;;
   }
 
   dimension: is_trashed {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_TRASHED ;;
   }
 
   dimension: is_useable {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_USEABLE ;;
   }
 
   dimension: is_webassign_author {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.IS_WEBASSIGN_AUTHOR ;;
   }
 
