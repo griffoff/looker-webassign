@@ -398,19 +398,19 @@ view: dim_question {
 
   dimension: req_flash {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.REQ_FLASH ;;
   }
 
   dimension: req_java {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.REQ_JAVA ;;
   }
 
   dimension: req_question_part_submission {
     group_label: "Question Attributes"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.REQ_QUESTION_PART_SUBMISSION ;;
   }
 
