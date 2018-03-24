@@ -128,6 +128,7 @@ explore: questionstext {
   join: dim_question {
     sql_on: ${dim_question.dim_question_id} = ${questionstext.questionid};;
     relationship: one_to_one
+    type: left_outer
   }
   join: dim_textbook {
     sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;

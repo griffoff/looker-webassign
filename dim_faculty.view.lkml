@@ -140,7 +140,7 @@ view: dim_faculty {
   dimension: schoolid {
     type: number
     value_format_name: id
-    sql: ${TABLE}.SCHOOLID ;;
+    sql: ${TABLE}.SCHOOL_ID ;;
   }
 
   dimension: sf_contact_id {
