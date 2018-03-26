@@ -5,9 +5,9 @@ view: responses {
     sql:
       select
         *
-        ,row_number() over (partition by responses.USERID,responses.QUESTIONID,responses.BOXNUM
-                              order by responses.ATTEMPTNUMBER desc) as reverse_attemptnumber
-      from WA2ANALYTICS.RESPONSES;;
+        ,row_number() over (partition by responses.USER_ID,responses.QUESTION_ID,responses.BOXNUM
+                              order by responses.ATTEMPT_NUM desc) as reverse_attemptnumber
+      from wa_app_activity.responses;;
 
       sql_trigger_value: select count(*) from WA2ANALYTICS.RESPONSES ;;
     }
@@ -27,7 +27,7 @@ view: responses {
     dimension: attemptnumber {
       label: "Attempt Number"
       type: number
-      sql: ${TABLE}.ATTEMPTNUMBER ;;
+      sql: ${TABLE}.ATTEMPT_NUM ;;
     }
 
     dimension: boxnum {
@@ -97,7 +97,7 @@ view: responses {
       label: "Question ID"
       type: number
       value_format_name: id
-      sql: ${TABLE}.QUESTIONID ;;
+      sql: ${TABLE}.QUESTION_ID ;;
     }
 
     dimension: sectionslessonsid {
@@ -127,7 +127,7 @@ view: responses {
       hidden: yes
       type: number
       value_format_name: id
-      sql: ${TABLE}.USERID ;;
+      sql: ${TABLE}.USER_ID ;;
     }
 
     measure: user_count {
