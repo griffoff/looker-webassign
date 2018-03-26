@@ -48,19 +48,19 @@ view: responses {
         quarter,
         year
       ]
-      sql: ${TABLE}.CREATEDAT ;;
+      sql: ${TABLE}.CREATED_AT ;;
     }
 
     dimension: iscorrect {
       label: "Is Correct"
       type: number
-      sql: ${TABLE}.ISCORRECT ;;
+      sql: ${TABLE}.IS_CORRECT ;;
     }
 
     measure: numbercorrect {
       label: "# Correct"
       type: sum
-      sql: ${TABLE}.ISCORRECT;;
+      sql: ${TABLE}.IS_CORRECT;;
       drill_fields: [all*]
     }
 
@@ -84,13 +84,13 @@ view: responses {
     dimension: overridescore {
       label: "Override Score"
       type: number
-      sql: ${TABLE}.OVERRIDESCORE ;;
+      sql: ${TABLE}.OVERRIDE_SCORE ;;
     }
 
     dimension: pointsscored {
       label: "Points Scored"
       type: number
-      sql: ${TABLE}.POINTSSCORED ;;
+      sql: ${TABLE}.POINTS_SCORED ;;
     }
 
     dimension: questionid {
@@ -119,7 +119,7 @@ view: responses {
         quarter,
         year
       ]
-      sql: ${TABLE}.UPDATEDAT ;;
+      sql: ${TABLE}.UPDATE_DAT ;;
     }
 
     dimension: userid {
