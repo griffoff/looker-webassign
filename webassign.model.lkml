@@ -11,6 +11,10 @@ include: "*.dashboard"
 
 case_sensitive: no
 
+include: "/core/common.lkml"
+
+explore: fivetran_audit {}
+
 explore: responses {
   label: "Sudent Take Analysis"
   from: responses
