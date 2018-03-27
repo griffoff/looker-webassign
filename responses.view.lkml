@@ -100,11 +100,11 @@ view: responses {
       sql: ${TABLE}.QUESTION_ID ;;
     }
 
-    dimension: sectionslessonsid {
-      label: "Section Lessons ID"
+    dimension: deployment_id {
+      label: "Deployment ID"
       type: number
       value_format_name: id
-      sql: ${TABLE}.SECTIONSLESSONSID ;;
+      sql: ${TABLE}.DEPLOYMENT_ID ;;
     }
 
     dimension_group: updatedat {

@@ -30,7 +30,7 @@ explore: responses {
   }
 
   join: dim_deployment {
-    sql_on: ${responses.sectionslessonsid} = ${dim_deployment.deployment_id};;
+    sql_on: ${responses.deployment_id} = ${dim_deployment.deployment_id};;
     relationship: many_to_one
   }
 
@@ -99,7 +99,7 @@ explore: responsesseedsample {
   from:  responsesseedsample
 
   join: responses {
-    sql_on: ${responsesseedsample.sectionslessonsid} = ${responses.sectionslessonsid}
+    sql_on: ${responsesseedsample.sectionslessonsid} = ${responses.deployment_id}
           and ${responsesseedsample.userid} = ${responses.userid}
           and ${responsesseedsample.questionid} = ${responses.questionid}
           and ${responsesseedsample.boxnum} = ${responses.boxnum}
@@ -107,7 +107,7 @@ explore: responsesseedsample {
     relationship: one_to_one
   }
   join: sectionslessons {
-    sql_on: ${responses.sectionslessonsid} = ${sectionslessons.id} ;;
+    sql_on: ${responses.deployment_id} = ${sectionslessons.id} ;;
     relationship: many_to_one
   }
   join: dim_question {
