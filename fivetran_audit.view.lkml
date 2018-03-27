@@ -4,16 +4,16 @@ view: fivetran_audit {
 
   derived_table: {
     sql:
-        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit.STATUS,PROGRESS
+        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from ft_olap_registration_reports.fivetran_audit
         union all
-        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit.STATUS,PROGRESS
+        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from ft_olap_etl_staging.fivetran_audit
         union all
-        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit.STATUS,PROGRESS
+        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from wa_app_activity.fivetran_audit
         union all
-        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit.STATUS,PROGRESS
+        select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from wa_app_v4net.fivetran_audit
       ;;
   }
