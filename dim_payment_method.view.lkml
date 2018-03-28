@@ -5,6 +5,7 @@ view: dim_payment_method {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_PAYMENT_METHOD_ID ;;
+    hidden: yes
   }
 
   dimension: category {

@@ -6,6 +6,7 @@ view: dim_textbook {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
+    hidden: yes
   }
 
   dimension: author {
@@ -72,6 +73,7 @@ view: dim_textbook {
   dimension: dim_discipline_id {
     type: number
     sql: ${TABLE}.DIM_DISCIPLINE_ID ;;
+    hidden: yes
   }
 
   dimension: edition {

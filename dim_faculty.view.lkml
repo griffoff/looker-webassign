@@ -6,6 +6,7 @@ view: dim_faculty {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_FACULTY_ID ;;
+    hidden: yes
   }
 
   dimension_group: created {
@@ -72,6 +73,7 @@ view: dim_faculty {
   dimension: dim_school_id {
     type: number
     sql: ${TABLE}.DIM_SCHOOL_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_created {

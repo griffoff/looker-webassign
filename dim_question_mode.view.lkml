@@ -5,6 +5,7 @@ view: dim_question_mode {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_QUESTION_MODE_ID ;;
+    hidden: yes
   }
 
   dimension: hashcode {

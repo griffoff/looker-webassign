@@ -11,11 +11,13 @@ view: users {
   dimension: _fivetran_deleted {
     type: yesno
     sql: ${TABLE}._FIVETRAN_DELETED ;;
+    hidden: yes
   }
 
   dimension: _fivetran_synced {
     type: string
     sql: ${TABLE}._FIVETRAN_SYNCED ;;
+    hidden: yes
   }
 
   dimension: active {

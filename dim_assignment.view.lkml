@@ -1,10 +1,12 @@
 view: dim_assignment {
+  label: "Assignment"
   sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_ASSIGNMENT ;;
 
   dimension: dim_assignment_id {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_ASSIGNMENT_ID ;;
+    hidden: yes
   }
 
   dimension: assignment_id {

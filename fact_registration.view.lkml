@@ -37,17 +37,20 @@ view: fact_registration {
   dimension: dim_school_id {
     type: number
     sql: ${TABLE}.DIM_SCHOOL_ID ;;
+    hidden: yes
   }
 
   dimension: dim_section_id {
     type: number
     # hidden: yes
     sql: ${TABLE}.DIM_SECTION_ID ;;
+    hidden: yes
   }
 
   dimension: dim_textbook_id {
     type: number
     sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id {

@@ -6,6 +6,7 @@ view: dim_section {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_SECTION_ID ;;
+    hidden: yes
   }
 
   dimension: bb_version {
@@ -51,21 +52,25 @@ view: dim_section {
   dimension: bill_institution_invoice_number {
     type: string
     sql: ${TABLE}.BILL_INSTITUTION_INVOICE_NUMBER ;;
+    hidden: yes
   }
 
   dimension: bill_institution_method {
     type: string
     sql: ${TABLE}.BILL_INSTITUTION_METHOD ;;
+    hidden: yes
   }
 
   dimension: bill_institution_option {
     type: string
     sql: ${TABLE}.BILL_INSTITUTION_OPTION ;;
+    hidden: yes
   }
 
   dimension: bill_institution_po_num {
     type: string
     sql: ${TABLE}.BILL_INSTITUTION_PO_NUM ;;
+    hidden: yes
   }
 
   dimension: billing {
@@ -115,6 +120,7 @@ view: dim_section {
   dimension: course_instructor_username {
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_USERNAME ;;
+    hidden: yes
   }
 
   dimension: course_name {
@@ -173,11 +179,13 @@ view: dim_section {
     type: number
     # hidden: yes
     sql: ${TABLE}.DIM_DISCIPLINE_ID ;;
+    hidden: yes
   }
 
   dimension: dim_textbook_id {
     type: number
     sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_created {

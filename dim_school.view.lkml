@@ -6,6 +6,7 @@ view: dim_school {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_SCHOOL_ID ;;
+    hidden: yes
   }
 
   dimension: acct_mgr {

@@ -5,6 +5,7 @@ view: dim_isbn {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_ISBN_ID ;;
+    hidden: yes
   }
 
   dimension: _fivetran_deleted {

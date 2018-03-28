@@ -49,6 +49,11 @@ explore: responses {
     relationship: many_to_one
   }
 
+  join: dim_assignment {
+    sql_on: ${dim_assignment.dim_assignment_id} = ${dim_deployment.dim_assignment_id};;
+    relationship: one_to_many
+  }
+
   join: users {
     sql_on: ${responses.userid} = ${users.id} ;;
     relationship: many_to_one

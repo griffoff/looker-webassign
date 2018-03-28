@@ -8,6 +8,7 @@ view: dim_question {
     primary_key: yes
     type: number
     sql: ${TABLE}.DIM_QUESTION_ID ;;
+    hidden: yes
   }
 
   dimension: author_user_id {
@@ -86,12 +87,14 @@ view: dim_question {
   dimension: dim_question_mode_id {
     type: number
     sql: ${TABLE}.DIM_QUESTION_MODE_ID ;;
+    hidden: yes
   }
 
   dimension: dim_textbook_id {
     type: number
     # hidden: yes
     sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_created_et {
