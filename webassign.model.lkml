@@ -130,7 +130,7 @@ explore: questionstext {
   from:  questionstext
 
   join: dim_question {
-    sql_on: ${dim_question.dim_question_id} = ${questionstext.questionid};;
+    sql_on: ${dim_question.question_id} = ${questionstext.questionid};;
     relationship: one_to_one
     type: left_outer
   }
