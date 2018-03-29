@@ -120,7 +120,7 @@ persist_for: "20 hours"
         quarter,
         year
       ]
-      sql: ${TABLE}.UPDATE_AT ;;
+      sql: ${TABLE}.UPDATED_AT ;;
     }
 
     dimension: userid {

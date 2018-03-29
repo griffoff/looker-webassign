@@ -131,11 +131,10 @@ explore: responsesseedsample {
 
 }
 
-explore: questionstext {
-  from:  questionstext
+explore: questions {
 
   join: dim_question {
-    sql_on: ${dim_question.question_id} = ${questionstext.questionid};;
+    sql_on: ${dim_question.question_id} = ${questions.id};;
     relationship: one_to_one
     type: left_outer
   }
