@@ -1,4 +1,5 @@
 view: dim_deployment {
+  label: "Deployment"
   sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT ;;
 
   dimension: dim_deployment_id {
@@ -73,48 +74,56 @@ view: dim_deployment {
     type: number
     # hidden: yes
     sql: ${TABLE}.DIM_ASSIGNMENT_ID ;;
+    hidden: yes
   }
 
   dimension: dim_section_id {
     type: number
     # hidden: yes
     sql: ${TABLE}.DIM_SECTION_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_begins_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_BEGINS_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_due_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_DUE_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_ends_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_ENDS_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_first_save_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_FIRST_SAVE_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_last_save_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_LAST_SAVE_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_user_deleted_at_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_USER_DELETED_AT_ET ;;
+    hidden: yes
   }
 
   dimension_group: due_et {

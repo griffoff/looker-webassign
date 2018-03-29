@@ -1,63 +1,27 @@
 view: dim_section {
   view_label: "Section"
-  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION ;;
+  derived_table: {
+    sql: select time.cdate,sec.* from
+      FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION  sec
+      left join  FT_OLAP_REGISTRATION_REPORTS.DIM_TIME time
+      on sec.dim_time_id_starts = time.dim_time_id
+       ;;
+  }
+
+  measure: count {
+    type: count
+    drill_fields: [detail*]
+  }
+
+  dimension: cdate {
+    label: "Created Date"
+    type: date
+    sql: ${TABLE}.CDATE ;;
+  }
 
   dimension: dim_section_id {
-    primary_key: yes
     type: number
     sql: ${TABLE}.DIM_SECTION_ID ;;
-    hidden: yes
-  }
-
-  dimension: bb_version {
-    label: "Blackboard Version"
-    type: string
-    sql: ${TABLE}.BB_VERSION ;;
-  }
-
-  dimension: bill_institution_comments {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_COMMENTS ;;
-  }
-
-  dimension: bill_institution_contact_email {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_EMAIL ;;
-  }
-
-  dimension: bill_institution_contact_name {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_NAME ;;
-  }
-
-  dimension: bill_institution_contact_phone {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_PHONE ;;
-  }
-
-  dimension_group: bill_institution_invoice {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.BILL_INSTITUTION_INVOICE_DATE ;;
-  }
-
-  dimension: bill_institution_invoice_number {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_INVOICE_NUMBER ;;
-    hidden: yes
-  }
-
-  dimension: bill_institution_method {
-    type: string
-    sql: ${TABLE}.BILL_INSTITUTION_METHOD ;;
     hidden: yes
   }
 
@@ -67,206 +31,85 @@ view: dim_section {
     hidden: yes
   }
 
-  dimension: bill_institution_po_num {
+  dimension: bill_institution_contact_email {
     type: string
-    sql: ${TABLE}.BILL_INSTITUTION_PO_NUM ;;
+    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_EMAIL ;;
     hidden: yes
   }
 
-  dimension: billing {
-    label: "Billing Method"
-    description: "The billing method for the section. Ex: Student Access codes, Bill Institution, Free Trial, etc."
-    type: string
-    sql: ${TABLE}.BILLING ;;
-  }
-
-  dimension: class_key {
-    type: string
-    sql: ${TABLE}.CLASS_KEY ;;
-  }
-
-  dimension: course_description {
-    type: string
-    sql: ${TABLE}.COURSE_DESCRIPTION ;;
-  }
-
-  dimension: course_id {
+  dimension: bill_institution_invoice_amount {
     type: number
-    sql: ${TABLE}.COURSE_ID ;;
-  }
-
-  dimension: course_instructor_email {
-    type: string
-    sql: ${TABLE}.COURSE_INSTRUCTOR_EMAIL ;;
-  }
-
-  dimension: course_instructor_id {
-    description: "Course Owner (not necessarily the person teaching the section)"
-    type: number
-    sql: ${TABLE}.COURSE_INSTRUCTOR_ID ;;
-  }
-
-  dimension: course_instructor_name {
-    description: "Course Owner (not necessarily the person teaching the section)"
-    type: string
-    sql: ${TABLE}.COURSE_INSTRUCTOR_NAME ;;
-  }
-
-  dimension: course_instructor_sf_id {
-    type: string
-    sql: ${TABLE}.COURSE_INSTRUCTOR_SF_ID ;;
-  }
-
-  dimension: course_instructor_username {
-    type: string
-    sql: ${TABLE}.COURSE_INSTRUCTOR_USERNAME ;;
+    sql: ${TABLE}.BILL_INSTITUTION_INVOICE_AMOUNT ;;
     hidden: yes
   }
 
-  dimension: course_name {
+  dimension: year {
     type: string
-    sql: ${TABLE}.COURSE_NAME ;;
+    sql: ${TABLE}.YEAR ;;
+    hidden: yes
   }
 
-  dimension_group: created_eastern {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+  dimension: created_eastern {
+    type: string
     sql: ${TABLE}.CREATED_EASTERN ;;
-  }
-
-  dimension_group: date_from {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.DATE_FROM ;;
-  }
-
-  dimension_group: date_to {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.DATE_TO ;;
-  }
-
-  dimension: deployments {
-    type: number
-    sql: ${TABLE}.DEPLOYMENTS ;;
-  }
-
-  dimension: dim_discipline_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.DIM_DISCIPLINE_ID ;;
     hidden: yes
   }
 
-  dimension: dim_textbook_id {
-    type: number
-    sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
+  dimension: _fivetran_deleted {
+    type: string
+    sql: ${TABLE}._FIVETRAN_DELETED ;;
     hidden: yes
   }
 
   dimension: dim_time_id_created {
     type: number
-    value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_CREATED ;;
+    hidden: yes
   }
 
-  dimension: dim_time_id_ends {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.DIM_TIME_ID_ENDS ;;
+  dimension: bb_version {
+    type: string
+    sql: ${TABLE}.BB_VERSION ;;
+    hidden: yes
+  }
+
+  dimension: billing {
+    type: string
+    sql: ${TABLE}.BILLING ;;
+    hidden: yes
+  }
+
+  dimension: bill_institution_method {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_METHOD ;;
+    hidden: yes
+  }
+
+  dimension: bill_institution_contact_name {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_NAME ;;
+    hidden: yes
+  }
+
+  dimension: gb_configured {
+    type: string
+    sql: ${TABLE}.GB_CONFIGURED ;;
+    hidden: yes
+  }
+
+  dimension: section_instructor_username {
+    type: string
+    sql: ${TABLE}.SECTION_INSTRUCTOR_USERNAME ;;
   }
 
   dimension: dim_time_id_leeway {
     type: number
-    value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_LEEWAY ;;
+    hidden: yes
   }
 
-  dimension: dim_time_id_starts {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.DIM_TIME_ID_STARTS ;;
-  }
-
-  dimension_group: ends_eastern {
-    description: "Current End Date given by instructor. This date can change"
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.ENDS_EASTERN ;;
-  }
-
-  dimension: gb_configured {
-    label: "Section Gradebook Configured?"
-    description: "Section has Gradebook initialized and configured for use"
-    type: yesno
-    sql: ${TABLE}.GB_CONFIGURED ;;
-  }
-
-  dimension: gb_has_data {
-    label: "Section Gradebook Has Data?"
-    description: "GradeBook has at least one student with a non-zero average in at least one GradeBook Category"
-    type: yesno
-    sql: ${TABLE}.GB_HAS_DATA ;;
-  }
-
-  dimension: granted_ebook {
-    label: "Section Granted Ebook?"
-    description: "Was this section granted eBook access? Valid only for sections where billing type is not 'Student Access Codes'"
+  dimension: leeway_eastern {
     type: string
-    sql: ${TABLE}.GRANTED_EBOOK ;;
-  }
-
-  dimension: has_invoice {
-    label: "Section Has Invoice?"
-    description: "Is there an invoice number for this section?"
-    type: yesno
-    sql: ${TABLE}.HAS_INVOICE ;;
-  }
-
-  dimension_group: leeway_eastern {
-    description: "The Leeway Date marks the end of the student grace period. It is 2 weeks after the initial Start Date chosen by the instructor. The Census Date is two weeks after the Leeway Date, except in June and July when the Census Date is the same as the Leeway Date"
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
     sql: ${TABLE}.LEEWAY_EASTERN ;;
   }
 
@@ -275,11 +118,19 @@ view: dim_section {
     sql: ${TABLE}.MEETS ;;
   }
 
-  dimension: psp_enabled {
-    label: "Section PSP Enabled?"
-    description: "PSP is turned on for the class. Values are 'Yes', 'No', or 'n/a' if the Textbook does not have an active PSP component."
+  dimension: registrations {
+    type: number
+    sql: ${TABLE}.REGISTRATIONS ;;
+  }
+
+  dimension: dim_time_id_ends {
+    type: number
+    sql: ${TABLE}.DIM_TIME_ID_ENDS ;;
+  }
+
+  dimension: course_name {
     type: string
-    sql: ${TABLE}.PSP_ENABLED ;;
+    sql: ${TABLE}.COURSE_NAME ;;
   }
 
   dimension: psp_mode {
@@ -287,9 +138,40 @@ view: dim_section {
     sql: ${TABLE}.PSP_MODE ;;
   }
 
-  dimension: psp_students_attempting_quiz {
+  dimension: date_to {
+    type: string
+    sql: ${TABLE}.DATE_TO ;;
+    hidden: yes
+  }
+
+  dimension: course_instructor_id {
     type: number
-    sql: ${TABLE}.PSP_STUDENTS_ATTEMPTING_QUIZ ;;
+    sql: ${TABLE}.COURSE_INSTRUCTOR_ID ;;
+  }
+
+  dimension: version {
+    type: number
+    sql: ${TABLE}.VERSION ;;
+  }
+
+  dimension: course_instructor_name {
+    type: string
+    sql: ${TABLE}.COURSE_INSTRUCTOR_NAME ;;
+  }
+
+  dimension: bill_institution_comments {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_COMMENTS ;;
+  }
+
+  dimension: section_instructor_name {
+    type: string
+    sql: ${TABLE}.SECTION_INSTRUCTOR_NAME ;;
+  }
+
+  dimension: bill_institution_isbn {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_ISBN ;;
   }
 
   dimension: psp_students_attempting_test {
@@ -297,16 +179,69 @@ view: dim_section {
     sql: ${TABLE}.PSP_STUDENTS_ATTEMPTING_TEST ;;
   }
 
-  dimension: registrations {
-    description: "The # of Student Activations"
+  dimension: course_instructor_sf_id {
+    type: string
+    sql: ${TABLE}.COURSE_INSTRUCTOR_SF_ID ;;
+  }
+
+  dimension: bill_institution_invoice_date {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_INVOICE_DATE ;;
+    hidden: yes
+  }
+
+  dimension: course_description {
+    type: string
+    sql: ${TABLE}.COURSE_DESCRIPTION ;;
+  }
+
+  dimension: date_from {
+    type: string
+    sql: ${TABLE}.DATE_FROM ;;
+    hidden: yes
+  }
+
+  dimension: trashed {
+    type: string
+    sql: ${TABLE}.TRASHED ;;
+  }
+
+  dimension: ends_eastern {
+    type: string
+    sql: ${TABLE}.ENDS_EASTERN ;;
+  }
+
+  dimension: bill_institution_contact_phone {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_CONTACT_PHONE ;;
+    hidden: yes
+  }
+
+  dimension: section_instructor_sf_id {
+    type: string
+    sql: ${TABLE}.SECTION_INSTRUCTOR_SF_ID ;;
+  }
+
+  dimension: dim_time_id_starts {
     type: number
-    sql: ${TABLE}.REGISTRATIONS ;;
+    sql: ${TABLE}.DIM_TIME_ID_STARTS ;;
   }
 
   dimension: roster {
-    description: "The # of Students Enrolled"
     type: number
     sql: ${TABLE}.ROSTER ;;
+  }
+
+  dimension: _fivetran_synced {
+    type: string
+    sql: ${TABLE}._FIVETRAN_SYNCED ;;
+    hidden: yes
+  }
+
+  dimension: bill_institution_invoice_number {
+    type: string
+    sql: ${TABLE}.BILL_INSTITUTION_INVOICE_NUMBER ;;
+    hidden: yes
   }
 
   dimension: school_id {
@@ -319,31 +254,45 @@ view: dim_section {
     sql: ${TABLE}.SECTION_ID ;;
   }
 
-  dimension: section_instructor_email {
+  dimension: bill_institution_po_num {
     type: string
-    sql: ${TABLE}.SECTION_INSTRUCTOR_EMAIL ;;
+    sql: ${TABLE}.BILL_INSTITUTION_PO_NUM ;;
+    hidden: yes
   }
 
-  dimension: section_instructor_id {
-    description: "The actual person teaching the section. May or may not be the Course Owner/Instructor"
+  dimension: psp_enabled {
+    type: string
+    sql: ${TABLE}.PSP_ENABLED ;;
+  }
+
+  dimension: dim_textbook_id {
     type: number
-    sql: ${TABLE}.SECTION_INSTRUCTOR_ID ;;
+    sql: ${TABLE}.DIM_TEXTBOOK_ID ;;
   }
 
-  dimension: section_instructor_name {
-    description: "The actual person teaching the section. May or may not be the Course Owner/Instructor"
+  dimension: term {
     type: string
-    sql: ${TABLE}.SECTION_INSTRUCTOR_NAME ;;
+    sql: ${TABLE}.TERM ;;
   }
 
-  dimension: section_instructor_sf_id {
+  dimension: using_open_resources {
     type: string
-    sql: ${TABLE}.SECTION_INSTRUCTOR_SF_ID ;;
+    sql: ${TABLE}.USING_OPEN_RESOURCES ;;
   }
 
-  dimension: section_instructor_username {
+  dimension: course_id {
+    type: number
+    sql: ${TABLE}.COURSE_ID ;;
+  }
+
+  dimension: granted_ebook {
     type: string
-    sql: ${TABLE}.SECTION_INSTRUCTOR_USERNAME ;;
+    sql: ${TABLE}.GRANTED_EBOOK ;;
+  }
+
+  dimension: dim_discipline_id {
+    type: number
+    sql: ${TABLE}.DIM_DISCIPLINE_ID ;;
   }
 
   dimension: section_name {
@@ -351,87 +300,127 @@ view: dim_section {
     sql: ${TABLE}.SECTION_NAME ;;
   }
 
-  dimension_group: starts_eastern {
-    description: "The current Start Date as given by the instructor. This date can change."
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.STARTS_EASTERN ;;
+  dimension: section_instructor_email {
+    type: string
+    sql: ${TABLE}.SECTION_INSTRUCTOR_EMAIL ;;
   }
 
-  dimension: term {
-    description: "The term given to the class by the instructor. i.e. Spring, Summer, Fall. For High Schools this is often the year."
+  dimension: has_invoice {
     type: string
-    sql: ${TABLE}.TERM ;;
+    sql: ${TABLE}.HAS_INVOICE ;;
+  }
+
+  dimension: class_key {
+    type: string
+    sql: ${TABLE}.CLASS_KEY ;;
+  }
+
+  dimension: course_instructor_email {
+    type: string
+    sql: ${TABLE}.COURSE_INSTRUCTOR_EMAIL ;;
   }
 
   dimension: term_description {
-    description: "The term given to the class by the instructor. i.e. Spring, Summer, Fall. For High Schools this is often the year."
     type: string
     sql: ${TABLE}.TERM_DESCRIPTION ;;
   }
 
-  dimension: trashed {
-    type: yesno
-    sql: ${TABLE}.TRASHED ;;
-  }
-
-  dimension: using_open_resources {
-    type: yesno
-    sql: ${TABLE}.USING_OPEN_RESOURCES ;;
-  }
-
-  dimension: version {
-    type: number
-    sql: ${TABLE}.VERSION ;;
-  }
-
-  dimension: year {
+  dimension: course_instructor_username {
     type: string
-    sql: ${TABLE}.YEAR ;;
+    sql: ${TABLE}.COURSE_INSTRUCTOR_USERNAME ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
+  dimension: psp_students_attempting_quiz {
+    type: number
+    sql: ${TABLE}.PSP_STUDENTS_ATTEMPTING_QUIZ ;;
   }
 
-  measure: count_courseinstructors{
-    label: "# of Course Instructors"
-    type: count_distinct
-    description: "The Distinct Count of Course Instructors (Owners). Not always the same as the Section Instructor"
-    sql: ${course_instructor_id} ;;
+  dimension: deployments {
+    type: number
+    sql: ${TABLE}.DEPLOYMENTS ;;
   }
 
-  measure: count_sectioninstructors{
-    label: "# of Section Instructors"
-    type: count_distinct
-    description: "The Distinct Count of Section Instructors (The actual instructor teaching the section). Not always the same as the Course Instructor"
-    sql: ${section_instructor_id} ;;
+  dimension: starts_eastern {
+    type: string
+    sql: ${TABLE}.STARTS_EASTERN ;;
   }
 
-  # ----- Sets of fields for drilling ------
+  dimension: section_instructor_id {
+    type: number
+    sql: ${TABLE}.SECTION_INSTRUCTOR_ID ;;
+  }
+
+  dimension: gb_has_data {
+    type: string
+    sql: ${TABLE}.GB_HAS_DATA ;;
+  }
+
   set: detail {
     fields: [
+      cdate,
       dim_section_id,
-      course_name,
-      course_instructor_name,
-      course_instructor_username,
-      section_name,
-      section_instructor_name,
-      section_instructor_username,
+      bill_institution_option,
+      bill_institution_contact_email,
+      bill_institution_invoice_amount,
+      year,
+      created_eastern,
+#       _fivetran_deleted,
+      dim_time_id_created,
+      bb_version,
+      billing,
+      bill_institution_method,
       bill_institution_contact_name,
-      dim_discipline.dim_discipline_id,
-      dim_discipline.discipline_name,
-      dim_discipline.sub_discipline_name,
-      fact_registration.count
+      gb_configured,
+      section_instructor_username,
+      dim_time_id_leeway,
+      leeway_eastern,
+      meets,
+      registrations,
+      dim_time_id_ends,
+      course_name,
+      psp_mode,
+      date_to,
+      course_instructor_id,
+      version,
+      course_instructor_name,
+      bill_institution_comments,
+      section_instructor_name,
+      bill_institution_isbn,
+      psp_students_attempting_test,
+      course_instructor_sf_id,
+      bill_institution_invoice_date,
+      course_description,
+      date_from,
+      trashed,
+      ends_eastern,
+      bill_institution_contact_phone,
+      section_instructor_sf_id,
+      dim_time_id_starts,
+      roster,
+#       _fivetran_synced,
+      bill_institution_invoice_number,
+      school_id,
+      section_id,
+      bill_institution_po_num,
+      psp_enabled,
+      dim_textbook_id,
+      term,
+      using_open_resources,
+      course_id,
+      granted_ebook,
+      dim_discipline_id,
+      section_name,
+      section_instructor_email,
+      has_invoice,
+      class_key,
+      course_instructor_email,
+      term_description,
+      course_instructor_username,
+      psp_students_attempting_quiz,
+      deployments,
+      starts_eastern,
+      section_instructor_id,
+      gb_has_data
     ]
   }
 }

@@ -59,6 +59,11 @@ explore: responses {
     relationship: many_to_one
   }
 
+  join: dim_faculty {
+    sql_on: ${dim_faculty.dim_faculty_id} = ${dim_question.dim_faculty_id_author} ;;
+    relationship: one_to_many
+  }
+
 #  join: dim_school {
 #     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
 #     relationship: many_to_one

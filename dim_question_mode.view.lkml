@@ -1,4 +1,5 @@
 view: dim_question_mode {
+  label: "Question Mode"
   sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_QUESTION_MODE ;;
 
   dimension: dim_question_mode_id {
@@ -11,6 +12,7 @@ view: dim_question_mode {
   dimension: hashcode {
     type: number
     sql: ${TABLE}.HASHCODE ;;
+    hidden: yes
   }
 
   dimension: is_algebraic {

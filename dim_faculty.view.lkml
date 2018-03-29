@@ -94,7 +94,7 @@ view: dim_faculty {
 
   dimension: faculty {
     description: "Whether or not this instructor has faculty privileges in the WebAssign application, i.e. yes or no. There are some teaching TAs in the system who will have the value 'no'"
-    type: yesno
+#     type: yesno
     sql: ${TABLE}.FACULTY ;;
   }
 
