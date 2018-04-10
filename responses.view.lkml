@@ -1,17 +1,18 @@
 view: responses {
   #sql_table_name: WA2ANALYTICS.RESPONSES ;;
   view_label: "Responses"
-  derived_table: {
-    sql:
-      select
-        *
-        ,row_number() over (partition by responses.USER_ID,responses.QUESTION_ID,responses.BOXNUM
-                              order by responses.ATTEMPT_NUM desc) as reverse_attemptnumber
-      from wa_app_activity.responses;;
-
-persist_for: "20 hours"
-#       sql_trigger_value: select count(*) from WA2ANALYTICS.RESPONSES ;;
-    }
+#   derived_table: {
+#     sql:
+#       select
+#         *
+#         ,row_number() over (partition by responses.USER_ID,responses.QUESTION_ID,responses.BOXNUM
+#                               order by responses.ATTEMPT_NUM desc) as reverse_attemptnumber
+#       from wa_app_activity.responses;;
+#
+# persist_for: "20 hours"
+# #       sql_trigger_value: select count(*) from WA2ANALYTICS.RESPONSES ;;
+#     }
+  sql_table_name: wa_app_activity.responses ;;
 
     set: all {fields: [id, userid, dim_question.code, iscorrect]}
 
