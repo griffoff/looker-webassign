@@ -56,11 +56,19 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       sql: ${TABLE}.IS_CORRECT ;;
     }
 
+    measure: numberwrong {
+      label: "# Wrong"
+      type: sum
+#       sql:SELECT COUNT(*) FROM ${responses.SQL_TABLE_NAME}
+#       WHERE ${TABLE}.IS_CORRECT = 0 ;;
+    sql: CASE WHEN ${iscorrect} = 0 THEN 1 END ;;
+    }
+
     measure: numbercorrect {
       label: "# Correct"
       type: sum
       sql: ${TABLE}.IS_CORRECT;;
-      drill_fields: [all*]
+      drill_fields: [dim_question.question_id,iscorrect,attemptnumber]
     }
 
     measure: percentcorrect {

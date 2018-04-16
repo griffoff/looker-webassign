@@ -149,6 +149,17 @@ explore: questions {
   }
 }
 
+explore: questions_not_used {
+  join: dim_textbook {
+    sql_on: ${questions_not_used.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
+    relationship: many_to_one
+  }
+  join: dim_question_mode {
+    sql_on: ${questions_not_used.dim_question_id} = ${dim_question_mode.dim_question_mode_id};;
+    relationship: one_to_many
+  }
+}
+
 explore: footprints {
   label: "Testing footprints"
 }

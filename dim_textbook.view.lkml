@@ -1,6 +1,6 @@
 view: dim_textbook {
   label: "Textbook"
-  sql_table_name: WA2ANALYTICS.DIM_TEXTBOOK ;;
+  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_TEXTBOOK ;;
 
   dimension: dim_textbook_id {
     primary_key: yes
@@ -33,6 +33,7 @@ view: dim_textbook {
   }
 
   dimension: copyright_publisher {
+    description: "copyright year"
     type: string
     sql: ${TABLE}.COPYRIGHT_PUBLISHER ;;
   }
