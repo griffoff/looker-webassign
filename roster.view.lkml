@@ -1,5 +1,5 @@
 view: roster {
-  sql_table_name: WA2ANALYTICS.ROSTER ;;
+  sql_table_name: WA_APP_V4NET.ROSTER ;;
 
   dimension_group: created {
     type: time
