@@ -19,9 +19,9 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       sql: ${TABLE}.ID ;;
     }
 
-    dimension: reverse_attemptnumber {
-      label: "Reverse Attempt Number"
-    }
+#     dimension: reverse_attemptnumber {
+#       label: "Reverse Attempt Number"
+#     }
 
     dimension: attemptnumber {
       label: "Attempt Number"
@@ -83,10 +83,10 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       </div>;;
     }
 
-    dimension: is_last_attempt {
-      type: yesno
-      sql: ${reverse_attemptnumber} = 1 ;;
-    }
+#     dimension: is_last_attempt {
+#       type: yesno
+#       sql: ${reverse_attemptnumber} = 1 ;;
+#     }
 
     dimension: overridescore {
       label: "Override Score"
