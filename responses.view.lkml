@@ -143,6 +143,12 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       sql: ${userid} ;;
     }
 
+    measure: scores {
+      label: "Scores"
+      type: sum
+      sql: ${TABLE}.POINTS_SCORED;;
+    }
+
     measure: count {
       type: count
       drill_fields: [all*]

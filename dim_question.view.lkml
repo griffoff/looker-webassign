@@ -81,6 +81,7 @@ view: dim_question {
 
   dimension: dim_question_group_key_id {
     type: number
+    hidden: yes
     sql: ${TABLE}.DIM_QUESTION_GROUP_KEY_ID ;;
   }
 
@@ -99,12 +100,14 @@ view: dim_question {
 
   dimension: dim_time_id_created_et {
     type: number
+    hidden: yes
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_CREATED_ET ;;
   }
 
   dimension: dim_time_id_last_modified_et {
     type: number
+    hidden: yes
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_LAST_MODIFIED_ET ;;
   }
@@ -446,6 +449,7 @@ view: dim_question {
   dimension: textbookid {
     type: number
     value_format_name: id
+    hidden: yes
     sql: ${TABLE}.TEXTBOOKID ;;
   }
 
