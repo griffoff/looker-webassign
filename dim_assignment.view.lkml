@@ -10,16 +10,19 @@ view: dim_assignment {
   }
 
   dimension: assignment_id {
+    label: "Assignment ID"
     type: number
     sql: ${TABLE}.ASSIGNMENT_ID ;;
   }
 
   dimension: author {
+    description: "author of the assignment"
     type: number
     sql: ${TABLE}.AUTHOR ;;
   }
 
   dimension: author_name {
+    hidden: yes
     type: string
     sql: ${TABLE}.AUTHOR_NAME ;;
   }
@@ -40,11 +43,13 @@ view: dim_assignment {
   }
 
   dimension: date_from {
+    hidden: yes  ##random dates in the future
     type: string
     sql: ${TABLE}.DATE_FROM ;;
   }
 
   dimension: date_to {
+    hidden: yes ##random dates in 1990
     type: string
     sql: ${TABLE}.DATE_TO ;;
   }

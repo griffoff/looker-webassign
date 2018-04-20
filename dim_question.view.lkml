@@ -117,6 +117,107 @@ view: dim_question {
     sql: ${TABLE}.DISTINCT_MODES ;;
   }
 
+  dimension: MI{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.MI.%' ;;
+        label: "MI"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: XP{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.XP.%' ;;
+        label: "XP"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: SAMI{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.SAMI.%' ;;
+        label: "SAMI"
+      }
+      else: "N"
+    }
+    }
+
+  dimension: TB{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.TB.%' ;;
+        label: "TB"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: JIT{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.JIT.%' ;;
+        label: "JIT"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: TEC{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.TEC.%' ;;
+        label: "TEC"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: VE{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.VE.%' ;;
+        label: "VE"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: QP{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.QP.%' ;;
+        label: "QP"
+      }
+      else: "N"
+    }
+  }
+
+  dimension: AE{
+    type: string
+    case: {
+      when: {
+        sql: UPPER(${question_code}) like '%.AE.%' ;;
+        label: "AE"
+      }
+      else: "N"
+    }
+  }
+
+
+
 #   dimension: Features {
 #     group_label: "Question Attributes"
 #     type: string

@@ -73,6 +73,7 @@ view: roster {
   }
 
   measure: count {
+    label: "# Roster"
     type: count
     drill_fields: [nickname]
   }

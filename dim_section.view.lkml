@@ -207,7 +207,7 @@ view: dim_section {
   }
 
   dimension: ends_eastern {
-    type: string
+    type: date
     sql: ${TABLE}.ENDS_EASTERN ;;
   }
 
@@ -341,7 +341,7 @@ view: dim_section {
   }
 
   dimension: starts_eastern {
-    type: string
+    type: date
     sql: ${TABLE}.STARTS_EASTERN ;;
   }
 
