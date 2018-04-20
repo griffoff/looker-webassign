@@ -140,6 +140,12 @@ view: dim_deployment {
     sql: ${TABLE}.DUE_ET ;;
   }
 
+  measure: max_due_date {
+    description: "Max Due Date"
+    type: date_time
+    sql:MAX(${TABLE}.DUE_ET) ;;
+  }
+
   dimension_group: ends_et {
     type: time
     timeframes: [
