@@ -180,9 +180,10 @@ view: dim_textbook {
   }
 
   dimension: textbookid {
+    label: "Textbook ID"
     type: number
     value_format_name: id
-    sql: ${TABLE}.TEXTBOOKID ;;
+    sql: ${TABLE}.TEXTBOOK_ID ;;
   }
 
   dimension: version {
