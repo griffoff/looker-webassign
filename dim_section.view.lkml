@@ -252,6 +252,7 @@ view: dim_section {
   dimension: section_id {
     type: number
     sql: ${TABLE}.SECTION_ID ;;
+    primary_key: yes
   }
 
   dimension: bill_institution_po_num {
