@@ -147,6 +147,16 @@ explore: questions {
     sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
     relationship: many_to_one
   }
+
+  join: dim_section {
+    sql_on: ${dim_textbook.dim_textbook_id} = ${dim_section.dim_textbook_id};;
+    relationship: many_to_one
+  }
+
+  join: dim_faculty {
+    sql_on: ${dim_faculty.schoolid} = ${dim_section.school_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: questions_not_used {
