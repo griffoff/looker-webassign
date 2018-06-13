@@ -75,8 +75,28 @@ view: users {
     sql: ${TABLE}.USERNAME ;;
   }
 
-  measure: count {
+  measure: usercount {
     type: count
     drill_fields: [id, username, fullname, firstname, lastname]
   }
+
+  measure: percent_activation {
+    label: "% of Activations (used / exposed)"
+    description: "
+    No. of people / Total Roster in this context
+    i.e.
+    no. of people who accessed vs no. of people who were exposed to this item
+    "
+    type: number
+    sql: COALESCE(${usercount} / NULLIF(${dim_section.roster_sum}, 0.0),0) ;;
+    value_format_name: percent_1
+    html:
+      <div style="width:100%;">
+        <div style="width: {{rendered_value}};background-color: rgba(70,130,180, 0.25);text-align:center; overflow:visible">{{rendered_value}}</div>
+      </div>
+    ;;
+
+  }
+
+
 }
