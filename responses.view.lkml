@@ -17,6 +17,7 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       primary_key: yes
       type: number
       sql: ${TABLE}.ID ;;
+      hidden: yes
     }
 
 #     dimension: reverse_attemptnumber {
@@ -48,6 +49,8 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
         year
       ]
       sql: ${TABLE}.CREATED_AT ;;
+      hidden: yes
+
     }
 
     dimension: iscorrect {
@@ -115,7 +118,7 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     }
 
     dimension_group: updatedat {
-      label: "Update"
+      label: "Submission"
       type: time
       timeframes: [
         raw,
@@ -124,7 +127,8 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
         week,
         month,
         quarter,
-        year
+        year,
+        fiscal_year
       ]
       sql: ${TABLE}.UPDATED_AT ;;
     }

@@ -70,6 +70,7 @@ view: roster {
   dimension: user {
     type: number
     sql: ${TABLE}."USER" ;;
+    hidden: yes
   }
 
   measure: count {

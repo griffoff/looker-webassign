@@ -28,7 +28,7 @@ view: footprints {
 
   dimension: action_test {
     type: string
-    sql: CASE when "%login%" THEN 'login events' else 'NA' end ;;
+    sql: CASE when ${TABLE}.ACTION like '%login%' THEN 'login events' else 'NA' end ;;
   }
 
   dimension: sso_guid {

@@ -13,6 +13,12 @@ view: dim_section {
     drill_fields: [detail*]
   }
 
+  measure: roster_sum {
+    label: "Possible Users"
+    type: sum
+    sql: ${TABLE}.ROSTER ;;
+  }
+
   dimension: cdate {
     label: "Created Date"
     type: date
@@ -92,12 +98,13 @@ view: dim_section {
   }
 
   dimension: gb_configured {
+    group_label: "Gradebook Details"
     type: string
     sql: ${TABLE}.GB_CONFIGURED ;;
-    hidden: yes
   }
 
   dimension: section_instructor_username {
+    group_label: "Section Instructor Details"
     type: string
     sql: ${TABLE}.SECTION_INSTRUCTOR_USERNAME ;;
   }
@@ -111,11 +118,13 @@ view: dim_section {
   dimension: leeway_eastern {
     type: string
     sql: ${TABLE}.LEEWAY_EASTERN ;;
+    hidden: yes
   }
 
   dimension: meets {
     type: string
     sql: ${TABLE}.MEETS ;;
+    hidden: yes
   }
 
   dimension: registrations {
@@ -134,6 +143,7 @@ view: dim_section {
   }
 
   dimension: psp_mode {
+    group_label: "psp"
     type: string
     sql: ${TABLE}.PSP_MODE ;;
   }
@@ -145,6 +155,7 @@ view: dim_section {
   }
 
   dimension: course_instructor_id {
+    group_label: "Course Instructor Details"
     type: number
     sql: ${TABLE}.COURSE_INSTRUCTOR_ID ;;
   }
@@ -155,6 +166,7 @@ view: dim_section {
   }
 
   dimension: course_instructor_name {
+    group_label: "Course Instructor Details"
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_NAME ;;
   }
@@ -162,9 +174,11 @@ view: dim_section {
   dimension: bill_institution_comments {
     type: string
     sql: ${TABLE}.BILL_INSTITUTION_COMMENTS ;;
+    hidden: yes
   }
 
   dimension: section_instructor_name {
+    group_label: "Section Instructor Details"
     type: string
     sql: ${TABLE}.SECTION_INSTRUCTOR_NAME ;;
   }
@@ -175,11 +189,13 @@ view: dim_section {
   }
 
   dimension: psp_students_attempting_test {
+    group_label: "psp"
     type: number
     sql: ${TABLE}.PSP_STUDENTS_ATTEMPTING_TEST ;;
   }
 
   dimension: course_instructor_sf_id {
+    group_label: "Course Instructor Details"
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_SF_ID ;;
   }
@@ -204,6 +220,7 @@ view: dim_section {
   dimension: trashed {
     type: string
     sql: ${TABLE}.TRASHED ;;
+    hidden: yes
   }
 
   dimension: ends_eastern {
@@ -218,8 +235,10 @@ view: dim_section {
   }
 
   dimension: section_instructor_sf_id {
+    group_label: "Section Instructor Details"
     type: string
     sql: ${TABLE}.SECTION_INSTRUCTOR_SF_ID ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_starts {
@@ -262,6 +281,7 @@ view: dim_section {
   }
 
   dimension: psp_enabled {
+    group_label: "psp"
     type: string
     sql: ${TABLE}.PSP_ENABLED ;;
   }
@@ -279,6 +299,7 @@ view: dim_section {
   dimension: using_open_resources {
     type: string
     sql: ${TABLE}.USING_OPEN_RESOURCES ;;
+    hidden: yes
   }
 
   dimension: course_id {
@@ -294,6 +315,7 @@ view: dim_section {
   dimension: dim_discipline_id {
     type: number
     sql: ${TABLE}.DIM_DISCIPLINE_ID ;;
+    hidden: yes
   }
 
   dimension: section_name {
@@ -302,6 +324,7 @@ view: dim_section {
   }
 
   dimension: section_instructor_email {
+    group_label: "Section Instructor Details"
     type: string
     sql: ${TABLE}.SECTION_INSTRUCTOR_EMAIL ;;
   }
@@ -317,6 +340,7 @@ view: dim_section {
   }
 
   dimension: course_instructor_email {
+    group_label: "Course Instructor Details"
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_EMAIL ;;
   }
@@ -327,11 +351,13 @@ view: dim_section {
   }
 
   dimension: course_instructor_username {
+    group_label: "Course Instructor Details"
     type: string
     sql: ${TABLE}.COURSE_INSTRUCTOR_USERNAME ;;
   }
 
   dimension: psp_students_attempting_quiz {
+    group_label: "psp"
     type: number
     sql: ${TABLE}.PSP_STUDENTS_ATTEMPTING_QUIZ ;;
   }
@@ -347,11 +373,13 @@ view: dim_section {
   }
 
   dimension: section_instructor_id {
+    group_label: "Section Instructor Details"
     type: number
     sql: ${TABLE}.SECTION_INSTRUCTOR_ID ;;
   }
 
   dimension: gb_has_data {
+    group_label: "Gradebook Details"
     type: string
     sql: ${TABLE}.GB_HAS_DATA ;;
   }
