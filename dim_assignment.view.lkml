@@ -214,11 +214,13 @@ view: dim_assignment {
   }
 
   dimension: template_id {
+    group_label: "Template Details"
     type: number
     sql: ${TABLE}.TEMPLATE_ID ;;
   }
 
   dimension: template_name {
+    group_label: "Template Details"
     type: string
     sql: ${TABLE}.TEMPLATE_NAME ;;
   }
