@@ -80,6 +80,13 @@ view: users {
     drill_fields: [id, username, fullname, firstname, lastname]
   }
 
+#   measure: user_count {
+#     label: "# Distinct Users"
+#     description: "# distint users who have accessed an item from a section"
+#     type: count_distinct
+#     sql: array_construct(${usercount},${dim_deployment.section_id}) ;;
+#   }
+
   measure: percent_activation {
     label: "% of Activations (used / exposed)"
     description: "

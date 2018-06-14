@@ -30,6 +30,13 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       sql: ${TABLE}.ATTEMPT_NUM ;;
     }
 
+  measure: avg_attemptnumber {
+    label: "Average Attempt Number"
+    description: "Average of attempts done by students on a particular question"
+    type: average_distinct
+    sql: ${TABLE}.ATTEMPT_NUM ;;
+  }
+
     dimension: boxnum {
       label: "Box Num"
       type: number
@@ -143,6 +150,7 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
 
     measure: user_count {
       label: "# Users"
+      description: "# Unique users who have submitted a response"
       type: count_distinct
       sql: ${userid} ;;
     }
