@@ -161,11 +161,13 @@ view: dim_assignment {
   dimension: no_sigfigs {
     type: string
     sql: ${TABLE}.NO_SIGFIGS ;;
+    hidden: yes
   }
 
   dimension: pool {
     type: string
     sql: ${TABLE}.POOL ;;
+    hidden: yes
   }
 
   dimension: psp {
@@ -186,16 +188,19 @@ view: dim_assignment {
   dimension: sigfigs_tolerance_override {
     type: string
     sql: ${TABLE}.SIGFIGS_TOLERANCE_OVERRIDE ;;
+    hidden: yes
   }
 
   dimension: smw_mode {
     type: string
     sql: ${TABLE}.SMW_MODE ;;
+    hidden: yes
   }
 
   dimension: smw_value {
     type: number
     sql: ${TABLE}.SMW_VALUE ;;
+    hidden: yes
   }
 
   dimension: submission {
