@@ -9,9 +9,21 @@ view: dim_section {
   }
 
   measure: count {
-    type: count
+    label: "# Unique Sections"
+    description: "No of unique sections using webassign content"
+    type: count_distinct
+    sql: ${section_id} ;;
     drill_fields: [detail*]
   }
+
+  measure: school_count {
+    label: "# Unique Schools"
+    description: "No of unique schools using webassign platform"
+    type: count_distinct
+    sql: ${school_id} ;;
+    drill_fields: [detail*]
+  }
+
 
   measure: roster_sum {
     label: "Possible Users"

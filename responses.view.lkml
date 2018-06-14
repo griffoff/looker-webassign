@@ -155,6 +155,13 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       sql: ${userid} ;;
     }
 
+  measure: response_question_count {
+    label: "# Questions"
+    description: "# Unique questions answered by students"
+    type: count_distinct
+    sql: ${TABLE}.QUESTION_ID ;;
+  }
+
     measure: scores {
       label: "Scores"
       type: sum
@@ -162,6 +169,8 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     }
 
     measure: count {
+      label: "# Takes"
+      description: "Total count of takes by students "
       type: count
       drill_fields: [all*]
     }

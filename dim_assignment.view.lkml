@@ -15,6 +15,12 @@ view: dim_assignment {
     sql: ${TABLE}.ASSIGNMENT_ID ;;
   }
 
+  measure: count_assignment {
+    label: "# Assignments"
+    type: count_distinct
+    sql: ${TABLE}.ASSIGNMENT_ID ;;
+  }
+
   dimension: author {
     description: "author of the assignment"
     type: number
@@ -68,34 +74,40 @@ view: dim_assignment {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_ASSIGNMENT_FEEDBACK_ID_AFTER ;;
+    hidden: yes
   }
 
   dimension: dim_assignment_feedback_id_before {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_ASSIGNMENT_FEEDBACK_ID_BEFORE ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_first_save_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_FIRST_SAVE_ET ;;
+    hidden: yes
   }
 
   dimension: dim_time_id_last_save_et {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_TIME_ID_LAST_SAVE_ET ;;
+    hidden: yes
   }
 
   dimension: feedback_after {
     type: string
     sql: ${TABLE}.FEEDBACK_AFTER ;;
+    hidden: yes
   }
 
   dimension: feedback_before {
     type: string
     sql: ${TABLE}.FEEDBACK_BEFORE ;;
+    hidden: yes
   }
 
   dimension_group: first_save_et {

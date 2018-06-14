@@ -77,6 +77,7 @@ view: dim_question {
     type: number
     value_format_name: id
     sql: ${TABLE}.DIM_FACULTY_ID_AUTHOR ;;
+    hidden: yes
   }
 
   dimension: dim_question_group_key_id {
