@@ -206,11 +206,13 @@ view: dim_assignment {
   dimension: submission {
     type: string
     sql: ${TABLE}.SUBMISSION ;;
+    hidden: yes
   }
 
   dimension: submissions {
     type: number
     sql: ${TABLE}.SUBMISSIONS ;;
+    hidden: yes
   }
 
   dimension: template_id {
