@@ -206,6 +206,7 @@ view: dim_deployment {
   dimension: password_protected {
     type: string
     sql: ${TABLE}.PASSWORD_PROTECTED ;;
+    hidden: yes
   }
 
   dimension: psp {
@@ -221,6 +222,7 @@ view: dim_deployment {
   dimension: securexam_browser {
     type: string
     sql: ${TABLE}.SECUREXAM_BROWSER ;;
+    hidden: yes
   }
 
   dimension: timed_active {

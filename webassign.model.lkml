@@ -69,6 +69,11 @@ explore: responses {
 #     relationship: many_to_one
 #  }
 
+  join: dim_discipline {
+    sql_on: ${dim_discipline.dim_discipline_id} = ${dim_textbook.dim_discipline_id} ;;
+    relationship: one_to_many
+  }
+
 }
 explore: fact_registration {
   label: "Activations"

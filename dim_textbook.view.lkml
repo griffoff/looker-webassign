@@ -192,6 +192,7 @@ view: dim_textbook {
   }
 
   measure: count {
+    label: "# Textbooks"
     type: count
     drill_fields: [dim_textbook_id, name, publisher_name, dim_question.count]
   }
