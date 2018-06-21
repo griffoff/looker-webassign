@@ -24,7 +24,7 @@ explore: responses {
     relationship: many_to_one
   }
   join: dim_question_mode {
-    sql_on: ${dim_question.dim_question_mode_id}id} = ${dim_question_mode.dim_question_mode_id};;
+    sql_on: ${dim_question.dim_question_mode_id} = ${dim_question_mode.dim_question_mode_id};;
     relationship: one_to_many
   }
 
