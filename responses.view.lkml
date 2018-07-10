@@ -37,6 +37,12 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     sql: ${TABLE}.ATTEMPT_NUM ;;
   }
 
+  measure: max_attemptnumber {
+    label: "Max Attempt Number"
+    description: "Average of attempts done by students on a particular question"
+    type: max
+    sql: ${TABLE}.ATTEMPT_NUM ;;
+  }
     dimension: boxnum {
       label: "Box Num"
       type: number
