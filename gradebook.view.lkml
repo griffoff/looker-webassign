@@ -22,7 +22,7 @@ view: gradebook {
     sql: ${TABLE}.GBCOLID ;;
   }
 
-  dimension: outof {
+  dimension: outof_base {
     type: string
     sql: ${TABLE}.OUTOF ;;
   }
@@ -37,7 +37,7 @@ view: gradebook {
     sql: ${TABLE}."USER" ;;
   }
 
-  dimension: value {
+  dimension: value_base {
     type: string
     sql: ${TABLE}.VALUE ;;
   }
@@ -45,5 +45,17 @@ view: gradebook {
   measure: count {
     type: count
     drill_fields: []
+  }
+  measure: value {
+    type: sum
+    sql: ${value_base};;
+  }
+  measure: outof {
+    type: sum
+    sql: ${outof_base};;
+  }
+  measure: score {
+    type: number
+    sql: ${value}/${outof} ;;
   }
 }
