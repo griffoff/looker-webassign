@@ -175,6 +175,25 @@ explore: questions_not_used {
   }
 }
 
+explore: gradebook {
+  label: "Gradebook"
+  join: users {
+    sql_on: ${gradebook.user} = ${users.id} ;;
+    relationship: many_to_one
+  }
+  join: gbcolumns {
+    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
+    relationship: many_to_one
+  }
+  join: dim_section {
+    sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
+    relationship: many_to_one
+  }
+  join: categories {
+    sql_on: ${gbcolumns.col} = ${categories.id} ;;
+    relationship: many_to_one
+  }
+}
 explore: footprints {
   label: "Testing footprints"
 }
