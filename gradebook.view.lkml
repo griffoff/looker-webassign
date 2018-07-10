@@ -56,6 +56,7 @@ view: gradebook {
   }
   measure: score {
     type: number
-    sql: ${value}/${outof} ;;
+    sql: ${value}/nullif(${outof},0) ;;
+    value_format_name: percent_1
   }
 }
