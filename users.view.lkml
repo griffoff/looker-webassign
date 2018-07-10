@@ -46,7 +46,7 @@ view: users {
   }
 
   dimension: last_login {
-    type: string
+    type: date_time
     sql: ${TABLE}.LAST_LOGIN ;;
   }
 
@@ -60,10 +60,10 @@ view: users {
     sql: ${TABLE}.SCHOOL ;;
   }
 
-  dimension: ssn {
-    type: string
-    sql: ${TABLE}.SSN ;;
-  }
+#   dimension: ssn {
+#     type: string
+#     sql: ${TABLE}.SSN ;;
+#   }
 
   dimension: sso_guid {
     type: string
@@ -73,6 +73,12 @@ view: users {
   dimension: username {
     type: string
     sql: ${TABLE}.USERNAME ;;
+  }
+
+  measure: login_recency {
+    type: average
+    description: "No. of days since last login (average if not at student level)"
+    sql: datediff(day, ${last_login}, current_timestamp()) ;;
   }
 
   measure: usercount {

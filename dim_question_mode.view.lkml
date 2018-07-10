@@ -16,78 +16,78 @@ view: dim_question_mode {
   }
 
   dimension: is_algebraic {
-    type: string
-    sql: ${TABLE}.IS_ALGEBRAIC ;;
+    type: yesno
+    sql: ${TABLE}.IS_ALGEBRAIC = 'Y' ;;
   }
 
   dimension: is_essay {
-    type: string
-    sql: ${TABLE}.IS_ESSAY ;;
+    type: yesno
+    sql: ${TABLE}.IS_ESSAY = 'Y';;
   }
 
   dimension: is_file_upload {
-    type: string
-    sql: ${TABLE}.IS_FILE_UPLOAD ;;
+    type: yesno
+    sql: ${TABLE}.IS_FILE_UPLOAD = 'Y' ;;
   }
 
   dimension: is_fill_in_the_blank {
-    type: string
-    sql: ${TABLE}.IS_FILL_IN_THE_BLANK ;;
+    type: yesno
+    sql: ${TABLE}.IS_FILL_IN_THE_BLANK = 'Y';;
   }
 
   dimension: is_graphing {
-    type: string
-    sql: ${TABLE}.IS_GRAPHING ;;
+    type: yesno
+    sql: ${TABLE}.IS_GRAPHING = 'Y' ;;
   }
 
   dimension: is_image_map {
-    type: string
-    sql: ${TABLE}.IS_IMAGE_MAP ;;
+    type: yesno
+    sql: ${TABLE}.IS_IMAGE_MAP = 'Y' ;;
   }
 
   dimension: is_java {
-    type: string
-    sql: ${TABLE}.IS_JAVA ;;
+    type: yesno
+    sql: ${TABLE}.IS_JAVA = 'Y';;
   }
 
   dimension: is_matching {
-    type: string
-    sql: ${TABLE}.IS_MATCHING ;;
+    type: yesno
+    sql: ${TABLE}.IS_MATCHING = 'Y';;
   }
 
   dimension: is_multiple_choice {
-    type: string
-    sql: ${TABLE}.IS_MULTIPLE_CHOICE ;;
+    type: yesno
+    sql: ${TABLE}.IS_MULTIPLE_CHOICE = 'Y';;
   }
 
   dimension: is_multiple_select {
-    type: string
-    sql: ${TABLE}.IS_MULTIPLE_SELECT ;;
+    type: yesno
+    sql: ${TABLE}.IS_MULTIPLE_SELECT 'Y' ;;
   }
 
   dimension: is_number_line {
-    type: string
-    sql: ${TABLE}.IS_NUMBER_LINE ;;
+    type: yesno
+    sql: ${TABLE}.IS_NUMBER_LINE = 'Y';;
   }
 
   dimension: is_numerical {
-    type: string
-    sql: ${TABLE}.IS_NUMERICAL ;;
+    type: yesno
+    sql: ${TABLE}.IS_NUMERICAL = 'Y';;
   }
 
   dimension: is_pencil_pad {
-    type: string
-    sql: ${TABLE}.IS_PENCIL_PAD ;;
+    type: yesno
+    sql: ${TABLE}.IS_PENCIL_PAD = 'Y';;
   }
 
   dimension: is_poll {
-    type: string
-    sql: ${TABLE}.IS_POLL ;;
+    type: yesno
+    sql: ${TABLE}.IS_POLL = 'Y';;
   }
 
   dimension: is_symbolic {
-    type: string
-    sql: ${TABLE}.IS_SYMBOLIC ;;
+    type: yesno
+    sql: ${TABLE}.IS_SYMBOLIC = 'Y';;
   }
 
   measure: count {
