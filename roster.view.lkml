@@ -1,3 +1,11 @@
+view: roster_extended {
+  extends: [roster]
+
+  dimension: dropped {
+    type: yesno
+    sql:  ${dropdate_raw} < ${dim_section.ends_eastern_raw};;
+  }
+}
 view: roster {
   sql_table_name: WA_APP_V4NET.ROSTER ;;
 

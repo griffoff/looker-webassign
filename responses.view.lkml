@@ -11,11 +11,38 @@ view: responses_extended {
     sql: ${dim_deployment.due_et_raw};;
   }
 
+  dimension: course_start_date {
+    type: date_raw
+    sql: ${dim_section.start_date_raw} ;;
+    hidden: yes
+  }
+
+  dimension: weeks_relative_to_course_start {
+    type: number
+    sql: datediff(week, ${course_start_date}, ${createdat_raw})  ;;
+    value_format: "0 \w\e\e\k\s"
+  }
+
+  dimension: recency_date {
+    description: "A reference date for recency measures.
+    Get the earliest date of:
+     -  current date (for in progress courses)
+     -  course end date
+    "
+    # -  latest recorded response in the current context (for point in time reports)  "
+        # need to think about if/how this is possible
+    type: date_raw
+    hidden: yes
+    # need to think about if/how this is possible
+    #sql: least(${dim_section.recency_date}, max(${createdat_raw}) over ()) ;;
+    sql: ${dim_section.recency_date} ;;
+  }
+
   measure: performance_trend {
     description: "Average score last two weeks vs average score prior two weeks"
     type: number
-    sql:  avg(case when datediff(day, ${submission_date}, ${dim_section.recency_date}) <=14 then ${points_scored} end)
-      - avg(case when datediff(day, ${submission_date}, ${dim_section.recency_date}) between 15 and 28 then ${points_scored} end);;
+    sql:  avg(case when datediff(day, ${submission_date}, ${recency_date}) <=14 then ${points_scored} end)
+      - avg(case when datediff(day, ${submission_date}, ${recency_date}) between 15 and 28 then ${points_scored} end);;
     value_format_name: percent_1
   }
 

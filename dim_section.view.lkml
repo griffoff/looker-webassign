@@ -391,6 +391,12 @@ view: dim_section {
     sql: ${TABLE}.STARTS_EASTERN ;;
   }
 
+  dimension: start_date_raw {
+    type: date_raw
+    sql: ${starts_eastern} ;;
+    hidden: yes
+  }
+
   dimension: section_instructor_id {
     group_label: "Section Instructor Details"
     type: number

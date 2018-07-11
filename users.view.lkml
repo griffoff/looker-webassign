@@ -6,6 +6,7 @@ view: users_extended {
     description: "No. of days since last login (average if not at student level)"
     sql: datediff(day, ${last_login}, ${dim_section.recency_date}) ;;
   }
+
 }
 view: users {
   label: "Users"

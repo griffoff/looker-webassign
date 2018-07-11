@@ -87,6 +87,7 @@ explore: responses {
   }
 
   join: roster {
+    from: roster_extended
     sql_on: ${roster.section} = ${dim_deployment.section_id}
     and ${roster.user} = ${responses.userid};;
     relationship: many_to_one
