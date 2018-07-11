@@ -15,9 +15,52 @@ include: "/core/common.lkml"
 
 explore: fivetran_audit {}
 
+explore: gradebook_base {
+  extension: required
+  from: gradebook
+  view_name: gradebook
+
+  join: users {
+    sql_on: ${gradebook.user} = ${users.id} ;;
+    relationship: many_to_one
+  }
+  join: gbcolumns {
+    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
+    relationship: many_to_one
+  }
+  join: categories {
+    sql_on: ${gbcolumns.col} = ${categories.id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: gradebook {
+  extends: [gradebook_base]
+  label: "Gradebook"
+
+  join: dim_section {
+    sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
+    relationship: many_to_one
+  }
+}
+
 explore: responses {
+  extends: [gradebook_base]
   label: "Sudent Take Analysis"
   from: responses_extended
+  view_name: responses
+
+  join: gbcolumns {
+    #fields: []
+    sql_on: ${dim_section.section_id} = ${gbcolumns.section} ;;
+    relationship: many_to_one
+  }
+
+  join: gradebook {
+    sql_on: ${responses.userid} = ${gradebook.user}
+          and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
+    relationship: one_to_many
+  }
 
   join: dim_question {
     sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
@@ -176,25 +219,7 @@ explore: questions_not_used {
   }
 }
 
-explore: gradebook {
-  label: "Gradebook"
-  join: users {
-    sql_on: ${gradebook.user} = ${users.id} ;;
-    relationship: many_to_one
-  }
-  join: gbcolumns {
-    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
-    relationship: many_to_one
-  }
-  join: dim_section {
-    sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
-    relationship: many_to_one
-  }
-  join: categories {
-    sql_on: ${gbcolumns.col} = ${categories.id} ;;
-    relationship: many_to_one
-  }
-}
+
 explore: footprints {
   label: "Testing footprints"
 }

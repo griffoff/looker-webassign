@@ -1,6 +1,12 @@
 view: gradebook {
   sql_table_name: WA_APP_V4NET.GRADEBOOK ;;
 
+  dimension: pk {
+    primary_key: yes
+    hidden: yes
+    sql: hash(${user}, '|', ${gbcolid}) ;;
+  }
+
   dimension: _fivetran_deleted {
     type: yesno
     sql: ${TABLE}._FIVETRAN_DELETED ;;

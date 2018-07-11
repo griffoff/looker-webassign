@@ -24,7 +24,7 @@ view: gbcolumns {
 
   dimension: col {
     type: string
-    sql: ${TABLE}.COL ;;
+    sql: ${TABLE}.COL::string ;;
   }
 
   dimension: gbcolid {

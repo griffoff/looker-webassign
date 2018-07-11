@@ -3,8 +3,8 @@ view: categories {
 
   dimension: id {
     primary_key: yes
-    type: number
-    sql: ${TABLE}."ID" ;;
+    type: string
+    sql: ${TABLE}."ID"::string ;;
   }
 
   dimension: _fivetran_deleted {
