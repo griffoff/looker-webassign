@@ -59,4 +59,11 @@ view: gradebook {
     sql: ${value}/nullif(${outof},0) ;;
     value_format_name: percent_1
   }
+
+  measure: Homework_Score  {
+    group_label: "Category Scores"
+    type:  average
+    sql: case when ${categories.name} like '%homework%' then  ${value_base}/nullif(${outof_base},0) end ;;
+    value_format_name: percent_1
+  }
 }
