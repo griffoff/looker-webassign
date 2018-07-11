@@ -17,7 +17,7 @@ explore: fivetran_audit {}
 
 explore: responses {
   label: "Sudent Take Analysis"
-  from: responses
+  from: responses_extended
 
   join: dim_question {
     sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
@@ -55,6 +55,7 @@ explore: responses {
   }
 
   join: users {
+    from: users_extended
     sql_on: ${responses.userid} = ${users.id} ;;
     relationship: many_to_one
   }

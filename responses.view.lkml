@@ -1,3 +1,58 @@
+view: responses_extended {
+  extends: [responses]
+
+  dimension: start_date {
+    type: date_raw
+    sql: ${createdat_raw};;
+  }
+
+  dimension: due_date {
+    type: date_raw
+    sql: ${dim_deployment.due_et_raw};;
+  }
+
+  measure: performance_trend {
+    description: "Average score last two weeks vs average score prior two weeks"
+    type: number
+    sql:  avg(case when datediff(day, ${submission_date}, ${dim_section.recency_date}) <=14 then ${points_scored} end)
+      - avg(case when datediff(day, ${submission_date}, ${dim_section.recency_date}) between 15 and 28 then ${points_scored} end);;
+    value_format_name: percent_1
+  }
+
+  dimension: assignment_start_recency {
+    description: "How many days before due date was the assignment started?
+    - Higher is better."
+    sql: datediff(days, ${start_date}, ${due_date}) ;;
+    value_format_name: decimal_0
+  }
+
+  dimension: assignment_submission_recency {
+    description: "How many days before due date was the assignment submitted?
+    - Higher is better."
+    sql: datediff(days, ${submission_date}, ${due_date}) ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_assignment_start_recency {
+    type: average
+    sql: ${assignment_start_recency} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: class_average_score {
+    type: number
+    sql: sum(sum(${points_scored})) over () / sum(count(*)) over ()  ;;
+    value_format_name: percent_1
+  }
+
+  measure: percent_overdue {
+    label: "% late submissions"
+    type: number
+    sql: count(distinct case when ${assignment_submission_recency} < 0 then ${deployment_id} end) / count(distinct ${deployment_id}) ;;
+    value_format_name: percent_1
+  }
+
+}
 view: responses {
   #sql_table_name: WA2ANALYTICS.RESPONSES ;;
   view_label: "Responses"
@@ -90,6 +145,14 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     drill_fields: [dim_question.question_id,iscorrect,attemptnumber]
   }
 
+  measure: percentcorrect_noformatting {
+    label: "% Correct (no formatting)"
+    type: number
+    sql: ${numbercorrect} / nullif(${count}, 0);;
+    value_format_name: percent_1
+    drill_fields: [all*]
+  }
+
   measure: percentcorrect {
     label: "% Correct"
     type: number
@@ -134,6 +197,11 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     sql: ${TABLE}.DEPLOYMENT_ID ;;
   }
 
+  dimension: submission_date {
+    type: date_raw
+    sql:  ${TABLE}.UPDATED_AT;;
+  }
+
   dimension_group: updatedat {
     label: "Submission"
     type: time
@@ -147,7 +215,7 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
       year,
       fiscal_year
     ]
-    sql: ${TABLE}.UPDATED_AT ;;
+    sql: ${submission_date};;
   }
 
   dimension: userid {
@@ -192,6 +260,12 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     value_format_name: percent_1
   }
 
+  measure: question_average_attempts_variance {
+    type: number
+    sql: average(average(${points_scored}) over (partition by ${questionid}, ${boxnum}) - average(${points_scored}) over (partition by ${userid}, ${questionid}, ${boxnum})) ;;
+    value_format_name: decimal_1
+  }
+
   measure: average_essay_score  {
     group_label: "Question Modes"
     type:  average
@@ -220,5 +294,4 @@ sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
     value_format_name: percent_1
   }
 
-
-  }
+}

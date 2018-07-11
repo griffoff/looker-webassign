@@ -1,3 +1,12 @@
+view: users_extended {
+  extends: [users]
+
+  measure: login_recency {
+    type: average
+    description: "No. of days since last login (average if not at student level)"
+    sql: datediff(day, ${last_login}, ${dim_section.recency_date}) ;;
+  }
+}
 view: users {
   label: "Users"
   sql_table_name: WA_APP_V4NET.USERS ;;
@@ -73,12 +82,6 @@ view: users {
   dimension: username {
     type: string
     sql: ${TABLE}.USERNAME ;;
-  }
-
-  measure: login_recency {
-    type: average
-    description: "No. of days since last login (average if not at student level)"
-    sql: datediff(day, ${last_login}, current_timestamp()) ;;
   }
 
   measure: usercount {

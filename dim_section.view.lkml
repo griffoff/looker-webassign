@@ -6,6 +6,7 @@ view: dim_section {
       left join  FT_OLAP_REGISTRATION_REPORTS.DIM_TIME time
       on sec.dim_time_id_starts = time.dim_time_id
        ;;
+    sql_trigger_value:  select count(*) from FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION;;
   }
 
   measure: count {
@@ -235,6 +236,12 @@ view: dim_section {
     hidden: yes
   }
 
+  dimension: ends_eastern_raw {
+    hidden: yes
+    type: date_raw
+    sql: ${TABLE}.ENDS_EASTERN ;;
+  }
+
   dimension: ends_eastern {
     type: date
     sql: ${TABLE}.ENDS_EASTERN ;;
@@ -394,6 +401,12 @@ view: dim_section {
     group_label: "Gradebook Details"
     type: string
     sql: ${TABLE}.GB_HAS_DATA ;;
+  }
+
+  dimension: recency_date {
+    hidden: yes
+    type: date_raw
+    sql: least(current_timestamp(), ${ends_eastern_raw}) ;;
   }
 
   set: detail {
