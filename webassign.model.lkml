@@ -7,7 +7,7 @@ include: "*.view"
 include: "webassign.dims.model.lkml"
 
 # include all the dashboards
-include: "*.dashboard"
+#include: "*.dashboard"
 
 case_sensitive: no
 

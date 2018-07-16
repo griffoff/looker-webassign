@@ -41,8 +41,8 @@ view: responses_extended {
   measure: performance_trend {
     description: "Average score last two weeks vs average score prior two weeks"
     type: number
-    sql:  avg(case when datediff(day, ${submission_date}, ${recency_date}) <=14 then ${points_scored} end)
-      - avg(case when datediff(day, ${submission_date}, ${recency_date}) between 15 and 28 then ${points_scored} end);;
+    sql:  nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) <=14 then ${points_scored} end),0)
+      - nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) between 15 and 28 then ${points_scored} end),0);;
     value_format_name: percent_1
   }
 
