@@ -1,8 +1,8 @@
 connection: "snowflake_webassign"
 
 include: "/core/common.lkml"
-
 include: "*.view.lkml"         # include all views in this project
+#include: "*.dashboard.lookml"  # include all dashboards in this project
 
 datagroup: responses_datagroup {
   sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;

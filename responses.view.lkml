@@ -1,3 +1,88 @@
+# <<<<<<< HEAD
+# =======
+# view: responses_extended {
+#   extends: [responses]
+#
+#   dimension: start_date {
+#     type: date_raw
+#     sql: ${createdat_raw};;
+#   }
+#
+#   dimension: due_date {
+#     type: date_raw
+#     sql: ${dim_deployment.due_et_raw};;
+#   }
+#
+#   dimension: course_start_date {
+#     type: date_raw
+#     sql: ${dim_section.start_date_raw} ;;
+#     hidden: yes
+#   }
+#
+#   dimension: weeks_relative_to_course_start {
+#     type: number
+#     sql: datediff(week, ${course_start_date}, ${createdat_raw})  ;;
+#     value_format: "0 \w\e\e\k\s"
+#   }
+#
+#   dimension: recency_date {
+#     description: "A reference date for recency measures.
+#     Get the earliest date of:
+#      -  current date (for in progress courses)
+#      -  course end date
+#     "
+#     # -  latest recorded response in the current context (for point in time reports)  "
+#         # need to think about if/how this is possible
+#     type: date_raw
+#     hidden: yes
+#     # need to think about if/how this is possible
+#     #sql: least(${dim_section.recency_date}, max(${createdat_raw}) over ()) ;;
+#     sql: ${dim_section.recency_date} ;;
+#   }
+#
+#   measure: performance_trend {
+#     description: "Average score last two weeks vs average score prior two weeks"
+#     type: number
+#     sql:  nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) <=14 then ${points_scored} end),0)
+#       - nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) between 15 and 28 then ${points_scored} end),0);;
+#     value_format_name: percent_1
+#   }
+#
+#   dimension: assignment_start_recency {
+#     description: "How many days before due date was the assignment started?
+#     - Higher is better."
+#     sql: datediff(days, ${start_date}, ${due_date}) ;;
+#     value_format_name: decimal_0
+#   }
+#
+#   dimension: assignment_submission_recency {
+#     description: "How many days before due date was the assignment submitted?
+#     - Higher is better."
+#     sql: datediff(days, ${submission_date}, ${due_date}) ;;
+#     value_format_name: decimal_0
+#   }
+#
+#   measure: average_assignment_start_recency {
+#     type: average
+#     sql: ${assignment_start_recency} ;;
+#     value_format_name: decimal_1
+#   }
+#
+#   measure: class_average_score {
+#     type: number
+#     sql: sum(sum(${points_scored})) over () / sum(count(*)) over ()  ;;
+#     value_format_name: percent_1
+#   }
+#
+#   measure: percent_overdue {
+#     label: "% late submissions"
+#     type: number
+#     sql: count(distinct case when ${assignment_submission_recency} < 0 then ${deployment_id} end) / count(distinct ${deployment_id}) ;;
+#     value_format_name: percent_1
+#   }
+#
+# }
+# >>>>>>> branch 'master' of git@github.com:griffoff/looker-webassign.git
 view: responses {
   #sql_table_name: WA2ANALYTICS.RESPONSES ;;
   view_label: "Responses"
