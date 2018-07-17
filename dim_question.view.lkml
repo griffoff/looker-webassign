@@ -451,6 +451,12 @@ view: dim_question {
     sql: ${TABLE}.QDIFF_NUM_ATTEMPTS ;;
   }
 
+  dimension: qdiff_avg_attempts {
+    group_label: "Question Difficulty"
+    type: number
+    sql: ${qdiff_num_attempts} / nullif(${taq_num_students}, 0) ;;
+  }
+
   dimension: qdiff_pct_correct_additional {
     group_label: "Question Difficulty"
     type: number
@@ -543,9 +549,15 @@ view: dim_question {
     sql: ${TABLE}.TAQ_MED_TIME ;;
   }
 
-  measure: taq_num_students {
-    type: sum
+  dimension: taq_num_students {
+    type: number
     sql: ${TABLE}.TAQ_NUM_STUDENTS ;;
+  }
+
+  measure: num_students {
+    type: sum
+    sql: ${taq_num_students} ;;
+
   }
 
   dimension: textbookid {

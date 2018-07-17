@@ -1,17 +1,12 @@
-#connection: "snowflake_webassign"
-
 # include all the views
-include: "*.view"
-
+include: "*.view.lkml"
 # include dims model
 include: "webassign.dims.model.lkml"
 
 # include all the dashboards
-include: "*.dashboard"
+#include: "*.dashboard"
 
 case_sensitive: no
-
-include: "/core/common.lkml"
 
 explore: fivetran_audit {}
 
@@ -24,19 +19,22 @@ explore: gradebook_base {
     sql_on: ${gradebook.user} = ${users.id} ;;
     relationship: many_to_one
   }
-  join: gbcolumns {
-    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
-    relationship: many_to_one
-  }
+
   join: categories {
     sql_on: ${gbcolumns.col} = ${categories.id} ;;
     relationship: many_to_one
   }
+
 }
 
 explore: gradebook {
   extends: [gradebook_base]
   label: "Gradebook"
+
+  join: gbcolumns {
+    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
+    relationship: many_to_one
+  }
 
   join: dim_section {
     sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
@@ -45,10 +43,27 @@ explore: gradebook {
 }
 
 explore: responses {
-  extends: [gradebook_base]
+  extends: [dim_question, dim_deployment]
   label: "Sudent Take Analysis"
-  from: responses_extended
-  view_name: responses
+  #from: responses_extended
+  #view_name: responses
+
+  join: dim_question {
+    sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
+    relationship: many_to_one
+  }
+
+  join: dim_deployment {
+    sql_on: ${responses.deployment_id} = ${dim_deployment.deployment_id};;
+    relationship: many_to_one
+  }
+
+  join: roster {
+    from: roster_extended
+    sql_on: ${roster.section} = ${dim_deployment.section_id}
+            and ${roster.user} = ${responses.userid};;
+    relationship: many_to_one
+  }
 
   join: gbcolumns {
     #fields: []
@@ -58,44 +73,14 @@ explore: responses {
 
   join: gradebook {
     sql_on: ${responses.userid} = ${gradebook.user}
-          and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
-    relationship: one_to_many
-  }
-
-  join: dim_question {
-    sql_on: ${responses.questionid} = ${dim_question.question_id} ;;
-    relationship: many_to_one
-  }
-  join: dim_question_mode {
-    sql_on: ${dim_question.dim_question_mode_id} = ${dim_question_mode.dim_question_mode_id};;
-    relationship: one_to_many
-  }
-
-  join: dim_textbook {
-    sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
+      and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
     relationship: many_to_one
   }
 
-  join: dim_deployment {
-    sql_on: ${responses.deployment_id} = ${dim_deployment.deployment_id};;
+  join: categories {
+    view_label: "gbcategories"
+    sql_on: ${gbcolumns.col} = ${categories.id} ;;
     relationship: many_to_one
-  }
-
-  join: dim_section {
-    sql_on: ${dim_deployment.section_id} = ${dim_section.section_id};;
-    relationship: many_to_one
-  }
-
-  join: roster {
-    from: roster_extended
-    sql_on: ${roster.section} = ${dim_deployment.section_id}
-    and ${roster.user} = ${responses.userid};;
-    relationship: many_to_one
-  }
-
-  join: dim_assignment {
-    sql_on: ${dim_assignment.dim_assignment_id} = ${dim_deployment.dim_assignment_id};;
-    relationship: one_to_many
   }
 
   join: users {
@@ -104,22 +89,13 @@ explore: responses {
     relationship: many_to_one
   }
 
-  join: dim_faculty {
-    sql_on: ${dim_faculty.dim_faculty_id} = ${dim_question.dim_faculty_id_author} ;;
-    relationship: one_to_many
-  }
-
 #  join: dim_school {
 #     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
 #     relationship: many_to_one
 #  }
 
-  join: dim_discipline {
-    sql_on: ${dim_discipline.dim_discipline_id} = ${dim_textbook.dim_discipline_id} ;;
-    relationship: one_to_many
-  }
-
 }
+
 explore: fact_registration {
   label: "Activations"
 

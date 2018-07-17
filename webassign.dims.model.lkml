@@ -1,27 +1,52 @@
 connection: "snowflake_webassign"
 
-include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+include: "/core/common.lkml"
 
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }
+include: "*.view.lkml"         # include all views in this project
+
+datagroup: responses_datagroup {
+  sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;
+}
 
 explore: dim_textbook {
   extension: required
   join: dim_discipline {
     sql_on: ${dim_textbook.dim_discipline_id} = ${dim_discipline.dim_discipline_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: dim_deployment {
+  extension: required
+
+  join: dim_section {
+    sql_on: ${dim_deployment.section_id} = ${dim_section.section_id};;
+    relationship: many_to_one
+  }
+
+  join: dim_assignment {
+    #sql_on: ${dim_deployment.dim_assignment_id} = ${dim_assignment.dim_assignment_id};;
+    sql_on: ${dim_deployment.assignment_id} = ${dim_assignment.assignment_id};;
+    relationship: many_to_one
+  }
+}
+
+explore: dim_question {
+  extends: [dim_textbook]
+  extension: required
+
+  join: dim_question_mode {
+    sql_on: ${dim_question.dim_question_mode_id} = ${dim_question_mode.dim_question_mode_id};;
+    relationship: one_to_many
+  }
+
+  join: dim_faculty {
+    sql_on: ${dim_faculty.dim_faculty_id} = ${dim_question.dim_faculty_id_author} ;;
+    relationship: one_to_many
+  }
+
+  join: dim_textbook {
+    sql_on: ${dim_question.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
     relationship: many_to_one
   }
 }
