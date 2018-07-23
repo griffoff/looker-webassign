@@ -111,16 +111,25 @@ view: responses_final {
     sql:${iscorrect};;
   }
 
+  measure: new_assignment_count {
+    label: "# New Assignments"
+    description: "# Unique assignments started by one or more student for the first time"
+    # TO DO!!!!
+    type: count_distinct
+    sql: ${deployment_id} ;;
+  }
+
   dimension: course_start_date {
     type: date_raw
     sql: ${dim_section.start_date_raw} ;;
     hidden: yes
   }
 
-  dimension: weeks_relative_to_course_start {
+  dimension: relative_week {
     type: number
     sql: datediff(week, ${course_start_date}, ${question_start})  ;;
     value_format: "0 \w\e\e\k\s"
+    alias: [weeks_relative_to_course_start]
   }
 
   dimension: recency_date {

@@ -18,6 +18,12 @@ view: users {
     sql: ${TABLE}.ID ;;
   }
 
+  #added for uniformity
+  dimension: user_id {
+    type: number
+    sql: ${TABLE}.ID ;;
+  }
+
   dimension: _fivetran_deleted {
     type: yesno
     sql: ${TABLE}._FIVETRAN_DELETED ;;

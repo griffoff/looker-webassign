@@ -1,174 +1,90 @@
-# <<<<<<< HEAD
-# =======
-# view: responses_extended {
-#   extends: [responses]
-#
-#   dimension: start_date {
-#     type: date_raw
-#     sql: ${createdat_raw};;
-#   }
-#
-#   dimension: due_date {
-#     type: date_raw
-#     sql: ${dim_deployment.due_et_raw};;
-#   }
-#
-#   dimension: course_start_date {
-#     type: date_raw
-#     sql: ${dim_section.start_date_raw} ;;
-#     hidden: yes
-#   }
-#
-#   dimension: weeks_relative_to_course_start {
-#     type: number
-#     sql: datediff(week, ${course_start_date}, ${createdat_raw})  ;;
-#     value_format: "0 \w\e\e\k\s"
-#   }
-#
-#   dimension: recency_date {
-#     description: "A reference date for recency measures.
-#     Get the earliest date of:
-#      -  current date (for in progress courses)
-#      -  course end date
-#     "
-#     # -  latest recorded response in the current context (for point in time reports)  "
-#         # need to think about if/how this is possible
-#     type: date_raw
-#     hidden: yes
-#     # need to think about if/how this is possible
-#     #sql: least(${dim_section.recency_date}, max(${createdat_raw}) over ()) ;;
-#     sql: ${dim_section.recency_date} ;;
-#   }
-#
-#   measure: performance_trend {
-#     description: "Average score last two weeks vs average score prior two weeks"
-#     type: number
-#     sql:  nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) <=14 then ${points_scored} end),0)
-#       - nvl(avg(case when datediff(day, ${submission_date}, ${recency_date}) between 15 and 28 then ${points_scored} end),0);;
-#     value_format_name: percent_1
-#   }
-#
-#   dimension: assignment_start_recency {
-#     description: "How many days before due date was the assignment started?
-#     - Higher is better."
-#     sql: datediff(days, ${start_date}, ${due_date}) ;;
-#     value_format_name: decimal_0
-#   }
-#
-#   dimension: assignment_submission_recency {
-#     description: "How many days before due date was the assignment submitted?
-#     - Higher is better."
-#     sql: datediff(days, ${submission_date}, ${due_date}) ;;
-#     value_format_name: decimal_0
-#   }
-#
-#   measure: average_assignment_start_recency {
-#     type: average
-#     sql: ${assignment_start_recency} ;;
-#     value_format_name: decimal_1
-#   }
-#
-#   measure: class_average_score {
-#     type: number
-#     sql: sum(sum(${points_scored})) over () / sum(count(*)) over ()  ;;
-#     value_format_name: percent_1
-#   }
-#
-#   measure: percent_overdue {
-#     label: "% late submissions"
-#     type: number
-#     sql: count(distinct case when ${assignment_submission_recency} < 0 then ${deployment_id} end) / count(distinct ${deployment_id}) ;;
-#     value_format_name: percent_1
-#   }
-#
-# }
-# >>>>>>> branch 'master' of git@github.com:griffoff/looker-webassign.git
 view: responses {
-  #sql_table_name: WA2ANALYTICS.RESPONSES ;;
+  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
-  derived_table: {
+#  derived_table: {
 #     sql:
 #       select
 #         to_date("CREATED_AT") as Submission_Date,*
 #       from wa_app_activity.responses
 #       where to_date("CREATED_AT") > '2016-01-01' ;;
-    sql:
-       with r as (
-            select
-              *
-              ,datediff(second, created_at, updated_at) as time_secs
-              ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from wa_app_activity.RESPONSES
-            where CREATED_AT >= '2017-01-01'
-        )
-      ,q as (
-          select
-                question_id
-                ,boxnum
-                --include up to 96% of the data for calculating stats, so as to exclude outliers
-                ,avg(case when q_percentile <= 0.96 then time_secs end) as q_avg_excl_outliers
-                ,median(case when q_percentile <= 0.96 then time_secs end) as q_median_excl_outliers
-                ,max(case when q_percentile <= 0.96 then time_secs end) as q_max_excl_outliers
-                --stats for entire population
-                ,avg(time_secs) as q_avg
-                ,median(time_secs) as q_median
-                ,max(time_secs) as q_max
-          from r
-          group by 1, 2
-        )
-      ,final_response as (
-            select
-                r.user_id, r.deployment_id, r.question_id, r.boxnum
-                ,max(attempt_num) as final_attempt_num
-                ,min(created_at) as first_attempt_start
-                ,max(updated_at) as final_attempt_finish
-                ,sum(case when r.time_secs > q_max_excl_outliers then null else r.time_secs end) as total_time_secs
-                ,avg(case when r.time_secs > q_max_excl_outliers then null else r.time_secs end) as avg_time_secs
-              --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
-              --  ,listagg(
-              --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
-                ,array_to_string(
-                  array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
-                  , '\n') as all_attempt_starts
-                ,array_to_string(array_agg(
-                    object_construct(
-                      'attempt', attempt_num
-                      ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-                      ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-                      ,'points scored', points_scored
-                      ,'override', override_score
-                    )
-                  ) within group (order by attempt_num)
-                ,'\n*********\n')
-                as all_attempts
-            from r
-            inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-            group by 1, 2, 3, 4
-        )
-        select
-            --r.created_at::date as Submission_Date
-            r.*
-            ,case when r.time_secs > q_max_excl_outliers then null else r.time_secs end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
-            ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
-            ,avg(derived_time_secs) over (partition by r.question_id, r.boxnum) as question_avg_time_secs
-            ,datediff(second, first_attempt_start, final_attempt_finish) as question_duration_secs
-            ,f.final_attempt_num is not null as final_attempt
-            ,f.first_attempt_start
-            ,f.final_attempt_finish
-            ,f.total_time_secs
-            ,f.avg_time_secs
-            ,f.all_attempt_starts
-            ,f.all_attempts
-        from r
-        inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-        left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
+#     sql:
+#        with r as (
+#             select
+#               *
+#               ,datediff(second, created_at, updated_at) as time_secs
+#               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
+#             from wa_app_activity.RESPONSES
+#             where CREATED_AT >= '2017-01-01'
+#         )
+#       ,q as (
+#           select
+#                 question_id
+#                 ,boxnum
+#                 --include up to 96% of the data for calculating stats, so as to exclude outliers
+#                 ,avg(case when q_percentile <= 0.96 and time_secs <= (60 * 15) then time_secs end) as q_avg_excl_outliers
+#                 ,median(case when q_percentile <= 0.96 and time_secs <= (60 * 15)  then time_secs end) as q_median_excl_outliers
+#                 ,max(case when q_percentile <= 0.96 then time_secs end) as q_max_excl_outliers
+#                 --stats for entire population
+#                 ,avg(time_secs) as q_avg
+#                 ,median(time_secs) as q_median
+#                 ,max(time_secs) as q_max
+#           from r
+#           group by 1, 2
+#         )
+#       ,final_response as (
+#             select
+#                 r.user_id, r.deployment_id, r.question_id, r.boxnum
+#                 ,max(attempt_num) as final_attempt_num
+#                 ,min(created_at) as first_attempt_start
+#                 ,max(updated_at) as final_attempt_finish
+#                 ,sum(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as total_time_secs
+#                 ,avg(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as avg_time_secs
+#               --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
+#               --  ,listagg(
+#               --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+#               --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
+#                 ,array_to_string(
+#                   array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+#                   , '\n') as all_attempt_starts
+#                 ,array_to_string(array_agg(
+#                     object_construct(
+#                       'attempt', attempt_num
+#                       ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+#                       ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+#                       ,'points scored', points_scored
+#                       ,'override', override_score
+#                     )
+#                   ) within group (order by attempt_num)
+#                 ,'\n*********\n')
+#                 as all_attempts
+#             from r
+#             inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+#             group by 1, 2, 3, 4
+#         )
+#         select
+#             --r.created_at::date as Submission_Date
+#             r.*
+#             ,case when r.time_secs <= least(q_max_excl_outliers, 15 * 60) then r.time_secs else null end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
+#             ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
+#             ,avg(derived_time_secs) over (partition by r.question_id, r.boxnum) as question_avg_time_secs
+#             ,datediff(second, first_attempt_start, final_attempt_finish) as question_duration_secs
+#             ,f.final_attempt_num is not null as final_attempt
+#             ,f.first_attempt_start
+#             ,f.final_attempt_finish
+#             ,f.total_time_secs
+#             ,f.avg_time_secs
+#             ,f.all_attempt_starts
+#             ,f.all_attempts
+#         from r
+#         inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+#         left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
+#
+#       ;;
+#
+#       #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
+#       datagroup_trigger: responses_datagroup
+#     }
 
-      ;;
-
-      #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
-      datagroup_trigger: responses_datagroup
-    }
 
     set: all {fields: [id, userid, attemptnumber, iscorrect]}
 
@@ -201,6 +117,13 @@ view: responses {
     sql:${TABLE}.total_time_secs / 3600 / 24;;
     value_format_name: duration_hms
   }
+  measure: avg_question_time {
+    description: "Avg time taken for a question"
+    type: average
+    sql:${total_time_taken};;
+    value_format_name: duration_hms
+  }
+
   dimension: avg_time_taken {
     description: "Avg time taken for an attempt at this question by this student"
     type:number
@@ -222,7 +145,20 @@ view: responses {
   dimension: attempt_time {
     description: "Time taken for this attempt"
     type:number
-    sql:${TABLE}.derived_time_secs / 3600 / 24;;
+    # remove any value over 15 minutes
+    sql: ${TABLE}.derived_time_secs / 3600 / 24;;
+    value_format_name: duration_hms
+  }
+  measure: total_attempt_time {
+    description: "Total time taken for all attempts"
+    type: sum
+    sql:${attempt_time};;
+    value_format_name: duration_hms
+  }
+  measure: avg_attempt_time {
+    description: "Total time taken for all attempts"
+    type: average
+    sql:${attempt_time};;
     value_format_name: duration_hms
   }
   dimension: attempt_time_buckets {
@@ -325,6 +261,18 @@ view: responses {
     drill_fields: [dim_question.question_id,iscorrect,attemptnumber]
   }
 
+  measure: response_question_correct_count {
+    label: "# Unique questions answered correctly"
+    type: count_distinct
+    sql: case when ${iscorrect} then hash(${questionid}, ${boxnum}, ${userid}) end ;;
+  }
+
+  measure: response_question_answered_count {
+    label: "# Unique questions answered correctly"
+    type: count_distinct
+    sql: hash(${questionid}, ${boxnum}, ${userid}) ;;
+  }
+
   measure: percentcorrect {
     label: "% Correct"
     type: number
@@ -369,8 +317,6 @@ view: responses {
     sql: ${TABLE}.DEPLOYMENT_ID ;;
   }
 
-
-
   dimension_group: updatedat {
     label: "Submission"
     type: time
@@ -407,6 +353,20 @@ view: responses {
     description: "# Unique questions answered by students"
     type: count_distinct
     sql: hash(${questionid}, ${boxnum}) ;;
+  }
+
+  measure: response_submission_count {
+    label: "# Submissions"
+    description: "# Assignments submitted"
+    type: count_distinct
+    sql: hash(${deployment_id}, ${userid}) ;;
+  }
+
+  measure: assignment_count {
+    label: "# Assignments"
+    description: "# Unique assignments taken by one or more student"
+    type: count_distinct
+    sql: ${deployment_id} ;;
   }
 
   measure: score {
