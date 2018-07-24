@@ -1,89 +1,89 @@
 view: responses {
-  sql_table_name: TEST.PG_TEST_RESPONSES ;;
+#  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
-#  derived_table: {
+ derived_table: {
 #     sql:
 #       select
 #         to_date("CREATED_AT") as Submission_Date,*
 #       from wa_app_activity.responses
 #       where to_date("CREATED_AT") > '2016-01-01' ;;
-#     sql:
-#        with r as (
-#             select
-#               *
-#               ,datediff(second, created_at, updated_at) as time_secs
-#               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-#             from wa_app_activity.RESPONSES
-#             where CREATED_AT >= '2017-01-01'
-#         )
-#       ,q as (
-#           select
-#                 question_id
-#                 ,boxnum
-#                 --include up to 96% of the data for calculating stats, so as to exclude outliers
-#                 ,avg(case when q_percentile <= 0.96 and time_secs <= (60 * 15) then time_secs end) as q_avg_excl_outliers
-#                 ,median(case when q_percentile <= 0.96 and time_secs <= (60 * 15)  then time_secs end) as q_median_excl_outliers
-#                 ,max(case when q_percentile <= 0.96 then time_secs end) as q_max_excl_outliers
-#                 --stats for entire population
-#                 ,avg(time_secs) as q_avg
-#                 ,median(time_secs) as q_median
-#                 ,max(time_secs) as q_max
-#           from r
-#           group by 1, 2
-#         )
-#       ,final_response as (
-#             select
-#                 r.user_id, r.deployment_id, r.question_id, r.boxnum
-#                 ,max(attempt_num) as final_attempt_num
-#                 ,min(created_at) as first_attempt_start
-#                 ,max(updated_at) as final_attempt_finish
-#                 ,sum(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as total_time_secs
-#                 ,avg(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as avg_time_secs
-#               --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
-#               --  ,listagg(
-#               --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-#               --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
-#                 ,array_to_string(
-#                   array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
-#                   , '\n') as all_attempt_starts
-#                 ,array_to_string(array_agg(
-#                     object_construct(
-#                       'attempt', attempt_num
-#                       ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-#                       ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-#                       ,'points scored', points_scored
-#                       ,'override', override_score
-#                     )
-#                   ) within group (order by attempt_num)
-#                 ,'\n*********\n')
-#                 as all_attempts
-#             from r
-#             inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-#             group by 1, 2, 3, 4
-#         )
-#         select
-#             --r.created_at::date as Submission_Date
-#             r.*
-#             ,case when r.time_secs <= least(q_max_excl_outliers, 15 * 60) then r.time_secs else null end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
-#             ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
-#             ,avg(derived_time_secs) over (partition by r.question_id, r.boxnum) as question_avg_time_secs
-#             ,datediff(second, first_attempt_start, final_attempt_finish) as question_duration_secs
-#             ,f.final_attempt_num is not null as final_attempt
-#             ,f.first_attempt_start
-#             ,f.final_attempt_finish
-#             ,f.total_time_secs
-#             ,f.avg_time_secs
-#             ,f.all_attempt_starts
-#             ,f.all_attempts
-#         from r
-#         inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-#         left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
-#
-#       ;;
-#
-#       #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
-#       datagroup_trigger: responses_datagroup
-#     }
+    sql:
+       with r as (
+            select
+              *
+              ,datediff(second, created_at, updated_at) as time_secs
+              ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
+            from wa_app_activity.RESPONSES
+            where CREATED_AT >= '2017-01-01'
+        )
+      ,q as (
+          select
+                question_id
+                ,boxnum
+                --include up to 96% of the data for calculating stats, so as to exclude outliers
+                ,avg(case when q_percentile <= 0.96 and time_secs <= (60 * 15) then time_secs end) as q_avg_excl_outliers
+                ,median(case when q_percentile <= 0.96 and time_secs <= (60 * 15)  then time_secs end) as q_median_excl_outliers
+                ,max(case when q_percentile <= 0.96 then time_secs end) as q_max_excl_outliers
+                --stats for entire population
+                ,avg(time_secs) as q_avg
+                ,median(time_secs) as q_median
+                ,max(time_secs) as q_max
+          from r
+          group by 1, 2
+        )
+      ,final_response as (
+            select
+                r.user_id, r.deployment_id, r.question_id, r.boxnum
+                ,max(attempt_num) as final_attempt_num
+                ,min(created_at) as first_attempt_start
+                ,max(updated_at) as final_attempt_finish
+                ,sum(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as total_time_secs
+                ,avg(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as avg_time_secs
+              --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
+              --  ,listagg(
+              --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
+                ,array_to_string(
+                  array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+                  , '\n') as all_attempt_starts
+                ,array_to_string(array_agg(
+                    object_construct(
+                      'attempt', attempt_num
+                      ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                      ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                      ,'points scored', points_scored
+                      ,'override', override_score
+                    )
+                  ) within group (order by attempt_num)
+                ,'\n*********\n')
+                as all_attempts
+            from r
+            inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+            group by 1, 2, 3, 4
+        )
+        select
+            --r.created_at::date as Submission_Date
+            r.*
+            ,case when r.time_secs <= least(q_max_excl_outliers, 15 * 60) then r.time_secs else null end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
+            ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
+            ,avg(derived_time_secs) over (partition by r.question_id, r.boxnum) as question_avg_time_secs
+            ,datediff(second, first_attempt_start, final_attempt_finish) as question_duration_secs
+            ,f.final_attempt_num is not null as final_attempt
+            ,f.first_attempt_start
+            ,f.final_attempt_finish
+            ,f.total_time_secs
+            ,f.avg_time_secs
+            ,f.all_attempt_starts
+            ,f.all_attempts
+        from r
+        inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+        left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
+
+      ;;
+
+      #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
+      datagroup_trigger: responses_datagroup
+    }
 
 
     set: all {fields: [id, userid, attemptnumber, iscorrect]}
