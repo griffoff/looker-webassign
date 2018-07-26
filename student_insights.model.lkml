@@ -7,7 +7,7 @@ explore: sections_students_assignments {
   extension: required
   from: dim_section
   view_name: dim_section
-  sql_always_where: ${dim_section.section_id} in (279725, 695831, 695133, 690010, 619649) ;;
+  #sql_always_where: ${dim_section.section_id} in (279725, 695831, 695133, 690010, 619649) ;;
 
   # get list of students on course
   join: roster {
