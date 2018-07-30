@@ -146,6 +146,13 @@ view: dim_deployment {
     sql:MAX(${TABLE}.DUE_ET) ;;
   }
 
+  dimension: relative_week {
+    description: "Week of the course in which this assignment is available"
+    type: number
+    sql: datediff(week, ${dim_section.start_date_raw}, ${begins_et_raw}) ;;
+    required_fields: [dim_section.start_date_raw]
+  }
+
   dimension_group: ends_et {
     type: time
     timeframes: [

@@ -1,7 +1,8 @@
 # include all the views
-include: "*.view.lkml"
+include: "[!_stats]*.view.lkml"
 # include dims model
 include: "webassign.dims.model.lkml"
+
 
 # include all the dashboards
 #include: "*.dashboard"

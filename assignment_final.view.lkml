@@ -8,6 +8,7 @@ view: assignment_final {
       column: total_score {field:responses.score}
       column: assignment_start {field:responses.min_attempt_start}
       column: assignment_finish {field:responses.max_attempt_finish}
+      derived_column: assignment_duration { sql: datediff(second, assignment_start, assignment_finish) / 3600 / 24;;}
       column: total_questions {field: responses.response_question_count}
       column: total_correct {field:responses.numbercorrect}
       column: due_date {field: dim_deployment.due_et_raw}
@@ -15,7 +16,7 @@ view: assignment_final {
       column: course_start_date {field: dim_section.start_date_raw}
       filters: {
         field: responses.final_attempt
-        value: "Yes"
+        value: "yes"
       }
       sort: {field:userid}
       sort: {field:deployment_id}
@@ -42,6 +43,20 @@ view: assignment_final {
   dimension: available_date {type: date_raw}
   dimension: assignment_start {type: date_raw}
   dimension: assignment_finish {type: date_raw}
+  dimension: assignment_duration {type: number}
+
+  measure: average_assignment_duration {
+    type: average
+    sql: ${assignment_duration}  ;;
+    value_format_name: duration_hms
+  }
+
+  measure: total_assignment_duration {
+    hidden: yes
+    type: sum
+    sql: ${assignment_duration}  ;;
+    value_format_name: duration_hms
+  }
 
   dimension: assignment_start_recency {
     description: "How long before due date was the assignment started?
@@ -69,9 +84,22 @@ view: assignment_final {
     value_format_name: decimal_1
   }
 
+  measure: total_assignment_start_recency {
+    type: sum
+    sql: ${assignment_start_recency} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: total_assignment_submission_recency {
+    type: sum
+    sql: ${assignment_submission_recency} ;;
+    value_format_name: decimal_1
+  }
+
+
   measure: late_submissions {
-    type: count_distinct
-    sql: case when ${assignment_submission_recency} < 0 then 1 end ;;
+    type: number
+    sql: count(case when ${assignment_submission_recency} < 0 then 1 end) ;;
   }
 
   measure: count {

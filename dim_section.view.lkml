@@ -388,12 +388,12 @@ view: dim_section {
 
   dimension: starts_eastern {
     type: date
-    sql: ${TABLE}.STARTS_EASTERN ;;
+    sql: ${start_date_raw} ;;
   }
 
   dimension: start_date_raw {
     type: date_raw
-    sql: ${starts_eastern} ;;
+    sql:  ${TABLE}.STARTS_EASTERN ;;
     hidden: yes
   }
 
