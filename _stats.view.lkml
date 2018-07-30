@@ -1604,11 +1604,12 @@ view: student_weekly_stats {
 view: datascience_raw {
   derived_table: {
     explore_source: student_metrics {
+      column: section_id { field:dim_section.section_id}
       column: sso_guid { field: users.sso_guid }
       column: relative_week { field: class_weekly_stats.relative_week }
       column: class_weekly_stats_sum_student_count { field: class_weekly_stats.sum_student_count }
       column: class_weekly_stats_average_assignment_duration { field: class_weekly_stats.average_assignment_duration }
-      column: student_weekly_stats_student_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
+      column: student_weekly_stats_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
       column: class_weekly_stats_percent_correct { field: class_weekly_stats.percent_correct }
       column: student_weekly_stats_percent_correct { field: student_weekly_stats.percent_correct }
       column: class_weekly_stats_average_attempts_per_question { field: class_weekly_stats.average_attempts_per_question }
@@ -1626,6 +1627,7 @@ view: datascience_raw {
     }
     datagroup_trigger: responses_datagroup
   }
+  dimension: section_id {}
   dimension: sso_guid {}
   dimension: relative_week {
     type: number
