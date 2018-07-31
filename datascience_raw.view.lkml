@@ -56,9 +56,10 @@ view: datascience_raw {
     type: number
   }
   dimension: Gradebook_Score {
-    description: "First available score in order of preference (Exam, Homework, Quiz)"
+    description: "First available score in order of preference (Exam, Homework, Quiz) or zero if none are available"
     value_format_name:  percent_1
     type: number
+    sql: coalesce(${Gradebook_Exam_Score}, ${Gradebook_Homework_Score}, ${Gradebook_Quiz_Score}, 0) ;;
   }
   dimension: Gradebook_Avg_Score {
     description: "Avg of available scores (Exam, Homework, Quiz)"
