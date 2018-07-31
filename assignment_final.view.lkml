@@ -102,6 +102,16 @@ view: assignment_final {
     sql: count(case when ${assignment_submission_recency} < 0 then 1 end) ;;
   }
 
+  measure: missed_assignments {
+    type: number
+    sql: count(case when ${assignment_submission_recency} is null then 1 end) ;;
+  }
+
+  measure: started_after_due {
+    type: number
+    sql: count(case when ${assignment_start} > ${due_date} then 1 end) ;;
+  }
+
   measure: count {
     label: "# Assignments"
     type: count

@@ -9,7 +9,8 @@ explore: sections_students_assignments {
   extension: required
   from: dim_section
   view_name: dim_section
-  sql_always_where: ${dim_textbook.author} = 'Stewart' and ${dim_section.start_date_raw} >= dateadd(month, -6, current_timestamp());;
+  sql_always_where: ${dim_textbook.code} in ('SCalcET8', 'SCalc8')--, 'SCalcET7', 'SCalc7')
+                      --and ${dim_section.start_date_raw} >= dateadd(month, -6, current_timestamp());;
   #sql_always_where: ${dim_section.section_id} in (279725, 695831, 695133, 690010, 619649) ;;
 
   # get list of students on course
