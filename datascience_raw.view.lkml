@@ -6,6 +6,9 @@ view: datascience_raw {
       column: sso_guid { field: users.sso_guid }
       column: relative_week { field: class_weekly_stats.relative_week }
       derived_column: pk { sql: hash(section_id || '|' || sso_guid || '|' || relative_week);; }
+      column: Gradebook_Homework_Score { field: gradebook.Homework_Score }
+      column: Gradebook_Exam_Score { field: gradebook.Exam_Score }
+      column: Gradebook_Quiz_Score { field: gradebook.Quiz_Score }
       column: class_weekly_stats_sum_student_count { field: class_weekly_stats.sum_student_count }
       column: class_weekly_stats_average_assignment_duration { field: class_weekly_stats.average_assignment_duration }
       column: student_weekly_stats_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
@@ -37,6 +40,38 @@ view: datascience_raw {
   dimension: section_id {}
   dimension: sso_guid {}
   dimension: relative_week {
+    type: number
+  }
+
+  dimension: Gradebook_Homework_Score {
+    value_format_name: percent_1
+    type: number
+  }
+  dimension: Gradebook_Exam_Score {
+    value_format_name: percent_1
+    type: number
+  }
+  dimension: Gradebook_Quiz_Score {
+    value_format_name:  percent_1
+    type: number
+  }
+  dimension: Gradebook_Score {
+    description: "First available score in order of preference (Exam, Homework, Quiz)"
+    value_format_name:  percent_1
+    type: number
+  }
+  dimension: Gradebook_Avg_Score {
+    description: "Avg of available scores (Exam, Homework, Quiz)"
+    sql: (
+            coalesce(${Gradebook_Exam_Score}, 0)
+            + coalesce(${Gradebook_Homework_Score}, 0)
+            + coalesce(${Gradebook_Quiz_Score}) )
+            / (
+              case when ${Gradebook_Exam_Score} is not null then 1 else 0 end
+              + case when ${Gradebook_Homework_Score} is not null then 1 else 0 end
+              + case when ${Gradebook_Quiz_Score} is not null then 1 else 0 end
+              );;
+    value_format_name:  percent_1
     type: number
   }
   dimension: class_weekly_stats_sum_student_count {
