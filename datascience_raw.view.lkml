@@ -1,42 +1,43 @@
 view: datascience_raw {
-  derived_table: {
-    explore_source: student_metrics {
-      column: set_type {field: datascience_course_filter.set_type }
-      column: textbook_code { field: dim_textbook.code }
-      column: section_id { field:dim_section.section_id}
-      column: sso_guid { field: users.sso_guid }
-      column: relative_week { field: class_weekly_stats.relative_week }
-      derived_column: pk { sql: hash(section_id || '|' || sso_guid || '|' || relative_week);; }
-      column: Gradebook_Homework_Score { field: gradebook.Homework_Score }
-      column: Gradebook_Exam_Score { field: gradebook.Exam_Score }
-      column: Gradebook_Quiz_Score { field: gradebook.Quiz_Score }
-      column: Gradebook_Other_Score { field: gradebook.Other_Score }
-      column: class_weekly_stats_sum_student_count { field: class_weekly_stats.sum_student_count }
-      column: class_weekly_stats_average_assignment_duration { field: class_weekly_stats.average_assignment_duration }
-      column: student_weekly_stats_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
-      column: class_weekly_stats_percent_correct { field: class_weekly_stats.percent_correct }
-      column: student_weekly_stats_percent_correct { field: student_weekly_stats.percent_correct }
-      column: class_weekly_stats_average_attempts_per_question { field: class_weekly_stats.average_attempts_per_question }
-      column: student_weekly_stats_average_attempts_per_question { field: student_weekly_stats.average_attempts_per_question }
-      column: class_weekly_stats_average_question_time_on_task { field: class_weekly_stats.average_question_time_on_task }
-      column: student_weekly_stats_average_question_time_on_task { field: student_weekly_stats.average_question_time_on_task }
-      column: student_weekly_stats_max_assignments_worked_on_to_date { field: student_weekly_stats.max_assignments_worked_on_to_date }
-      column: class_weekly_stats_max_assignments_worked_on_to_date { field: class_weekly_stats.max_assignments_worked_on_to_date }
-      column: student_weekly_stats_max_total_assignments_to_date { field: student_weekly_stats.max_total_assignments_to_date }
-      column: class_weekly_stats_max_total_assignments_to_date { field: class_weekly_stats.max_total_assignments_to_date }
-      column: class_weekly_stats_average_submission_recency { field: class_weekly_stats.average_submission_recency }
-      column: student_weekly_stats_student_weekly_stats_average_submission_recency { field: student_weekly_stats.average_submission_recency }
-      column: class_weekly_stats_sum_late_submissions { field: class_weekly_stats.sum_late_submissions }
-      column: student_weekly_stats_sum_late_submissions { field: student_weekly_stats.sum_late_submissions }
-      column: class_weekly_stats_sum_missed_assignments { field: class_weekly_stats.sum_missed_assignments }
-      column: student_weekly_stats_sum_missed_assignments { field: student_weekly_stats.sum_missed_assignments }
-#        filters: {
-#          field: dim_textbook.code
-#          value: "SCalcET8"
-#        }
-    }
-    datagroup_trigger: responses_datagroup
-  }
+  sql_table_name: shared.datascience_raw ;;
+#   derived_table: {
+#     explore_source: student_metrics {
+#       column: set_type {field: datascience_course_filter.set_type }
+#       column: textbook_code { field: dim_textbook.code }
+#       column: section_id { field:dim_section.section_id}
+#       column: sso_guid { field: users.sso_guid }
+#       column: relative_week { field: class_weekly_stats.relative_week }
+#       derived_column: pk { sql: hash(section_id || '|' || sso_guid || '|' || relative_week);; }
+#       column: Gradebook_Homework_Score { field: gradebook.Homework_Score }
+#       column: Gradebook_Exam_Score { field: gradebook.Exam_Score }
+#       column: Gradebook_Quiz_Score { field: gradebook.Quiz_Score }
+#       column: Gradebook_Other_Score { field: gradebook.Other_Score }
+#       column: class_weekly_stats_sum_student_count { field: class_weekly_stats.sum_student_count }
+#       column: class_weekly_stats_average_assignment_duration { field: class_weekly_stats.average_assignment_duration }
+#       column: student_weekly_stats_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
+#       column: class_weekly_stats_percent_correct { field: class_weekly_stats.percent_correct }
+#       column: student_weekly_stats_percent_correct { field: student_weekly_stats.percent_correct }
+#       column: class_weekly_stats_average_attempts_per_question { field: class_weekly_stats.average_attempts_per_question }
+#       column: student_weekly_stats_average_attempts_per_question { field: student_weekly_stats.average_attempts_per_question }
+#       column: class_weekly_stats_average_question_time_on_task { field: class_weekly_stats.average_question_time_on_task }
+#       column: student_weekly_stats_average_question_time_on_task { field: student_weekly_stats.average_question_time_on_task }
+#       column: student_weekly_stats_max_assignments_worked_on_to_date { field: student_weekly_stats.max_assignments_worked_on_to_date }
+#       column: class_weekly_stats_max_assignments_worked_on_to_date { field: class_weekly_stats.max_assignments_worked_on_to_date }
+#       column: student_weekly_stats_max_total_assignments_to_date { field: student_weekly_stats.max_total_assignments_to_date }
+#       column: class_weekly_stats_max_total_assignments_to_date { field: class_weekly_stats.max_total_assignments_to_date }
+#       column: class_weekly_stats_average_submission_recency { field: class_weekly_stats.average_submission_recency }
+#       column: student_weekly_stats_student_weekly_stats_average_submission_recency { field: student_weekly_stats.average_submission_recency }
+#       column: class_weekly_stats_sum_late_submissions { field: class_weekly_stats.sum_late_submissions }
+#       column: student_weekly_stats_sum_late_submissions { field: student_weekly_stats.sum_late_submissions }
+#       column: class_weekly_stats_sum_missed_assignments { field: class_weekly_stats.sum_missed_assignments }
+#       column: student_weekly_stats_sum_missed_assignments { field: student_weekly_stats.sum_missed_assignments }
+# #        filters: {
+# #          field: dim_textbook.code
+# #          value: "SCalcET8"
+# #        }
+#     }
+#     datagroup_trigger: responses_datagroup
+#   }
   dimension: pk {primary_key:yes hidden:yes}
   dimension: set_type {type: string}
   dimension: textbook_code {type: string}

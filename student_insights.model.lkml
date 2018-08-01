@@ -79,10 +79,12 @@ explore: sections_students_assignments {
 }
 
 explore: student_metrics {
+  from: datascience_course_filter
+  view_name: datascience_course_filter
   extends: [sections_students_assignments]
 
-  join: datascience_course_filter {
-    sql_on: ${dim_section.section_id} = ${datascience_course_filter.section_id} ;;
+  join: dim_section {
+    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
     relationship: one_to_one
     type: inner
   }
