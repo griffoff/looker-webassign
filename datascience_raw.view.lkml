@@ -9,6 +9,7 @@ view: datascience_raw {
       column: Gradebook_Homework_Score { field: gradebook.Homework_Score }
       column: Gradebook_Exam_Score { field: gradebook.Exam_Score }
       column: Gradebook_Quiz_Score { field: gradebook.Quiz_Score }
+      column: Gradebook_Other_Score { field: gradebook.Other_Score }
       column: class_weekly_stats_sum_student_count { field: class_weekly_stats.sum_student_count }
       column: class_weekly_stats_average_assignment_duration { field: class_weekly_stats.average_assignment_duration }
       column: student_weekly_stats_average_assignment_duration { field: student_weekly_stats.average_assignment_duration }
@@ -51,6 +52,10 @@ view: datascience_raw {
     value_format_name: percent_1
     type: number
   }
+  dimension: Gradebook_Other_Score {
+    value_format_name: percent_1
+    type: number
+  }
   dimension: Gradebook_Quiz_Score {
     value_format_name:  percent_1
     type: number
@@ -59,18 +64,20 @@ view: datascience_raw {
     description: "First available score in order of preference (Exam, Homework, Quiz) or zero if none are available"
     value_format_name:  percent_1
     type: number
-    sql: coalesce(${Gradebook_Exam_Score}, ${Gradebook_Homework_Score}, ${Gradebook_Quiz_Score}, 0) ;;
+    sql: coalesce(${Gradebook_Exam_Score}, ${Gradebook_Homework_Score}, ${Gradebook_Quiz_Score},${Gradebook_Other_Score}, 0) ;;
   }
   dimension: Gradebook_Avg_Score {
     description: "Avg of available scores (Exam, Homework, Quiz)"
     sql: (
             coalesce(${Gradebook_Exam_Score}, 0)
             + coalesce(${Gradebook_Homework_Score}, 0)
-            + coalesce(${Gradebook_Quiz_Score}) )
+            + coalesce(${Gradebook_Quiz_Score},0)
+            + coalesce(${Gradebook_Other_Score},0) )
             / (
               case when ${Gradebook_Exam_Score} is not null then 1 else 0 end
               + case when ${Gradebook_Homework_Score} is not null then 1 else 0 end
               + case when ${Gradebook_Quiz_Score} is not null then 1 else 0 end
+              + case when ${Gradebook_Other_Score} is not null then 1 else 0 end
               );;
     value_format_name:  percent_1
     type: number
