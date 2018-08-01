@@ -38,6 +38,8 @@ view: class_weekly_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_section.section_id}
+      sort: {field: responses_final.relative_week}
     }
     datagroup_trigger: responses_datagroup
   }

@@ -1,6 +1,7 @@
 view: datascience_raw {
   derived_table: {
     explore_source: student_metrics {
+      column: set_type {field: datascience_course_filter.set_type }
       column: textbook_code { field: dim_textbook.code }
       column: section_id { field:dim_section.section_id}
       column: sso_guid { field: users.sso_guid }
@@ -28,20 +29,19 @@ view: datascience_raw {
       column: student_weekly_stats_sum_late_submissions { field: student_weekly_stats.sum_late_submissions }
       column: class_weekly_stats_sum_missed_assignments { field: class_weekly_stats.sum_missed_assignments }
       column: student_weekly_stats_sum_missed_assignments { field: student_weekly_stats.sum_missed_assignments }
-       filters: {
-         field: dim_textbook.code
-         value: "SCalcET8"
-       }
+#        filters: {
+#          field: dim_textbook.code
+#          value: "SCalcET8"
+#        }
     }
     datagroup_trigger: responses_datagroup
   }
   dimension: pk {primary_key:yes hidden:yes}
-  dimension: textbook_code {}
-  dimension: section_id {}
-  dimension: sso_guid {}
-  dimension: relative_week {
-    type: number
-  }
+  dimension: set_type {type: string}
+  dimension: textbook_code {type: string}
+  dimension: section_id {type: number}
+  dimension: sso_guid {type: string}
+  dimension: relative_week {type: number}
 
   dimension: Gradebook_Homework_Score {
     value_format_name: percent_1
