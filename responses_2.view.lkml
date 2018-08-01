@@ -1,19 +1,19 @@
-view: responses {
+view: responses_2 {
 #  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
- derived_table: {
+  derived_table: {
 #     sql:
 #       select
 #         to_date("CREATED_AT") as Submission_Date,*
 #       from wa_app_activity.responses
 #       where to_date("CREATED_AT") > '2016-01-01' ;;
-    sql:
+  sql:
        with r as (
             select
               *
               ,datediff(second, created_at, updated_at) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from wa_app_activity.RESPONSES
+            from webassign.wa_app_activity.RESPONSES
             where CREATED_AT >= '2017-01-01'
         )
       ,q as (
@@ -81,18 +81,19 @@ view: responses {
 
       ;;
 
-      datagroup_trigger: responses_datagroup
-    }
+      #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
+    datagroup_trigger: responses_datagroup
+  }
 
 
-    set: all {fields: [id, userid, attemptnumber, iscorrect]}
+  set: all {fields: [id, userid, attemptnumber, iscorrect]}
 
-    dimension: id {
-      primary_key: yes
-      type: number
-      sql: ${TABLE}.ID ;;
-      hidden: yes
-    }
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.ID ;;
+    hidden: yes
+  }
 
 #     dimension: reverse_attemptnumber {
 #       label: "Reverse Attempt Number"
@@ -250,7 +251,7 @@ view: responses {
     type: sum
 #       sql:SELECT COUNT(*) FROM ${responses.SQL_TABLE_NAME}
 #       WHERE ${TABLE}.IS_CORRECT = 0 ;;
-  sql: CASE WHEN not ${iscorrect} THEN 1 END ;;
+    sql: CASE WHEN not ${iscorrect} THEN 1 END ;;
   }
 
   measure: numbercorrect {
