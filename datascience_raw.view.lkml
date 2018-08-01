@@ -68,7 +68,11 @@ view: datascience_raw {
   }
   dimension: Gradebook_Avg_Score {
     description: "Avg of available scores (Exam, Homework, Quiz)"
-    sql: (
+    sql: ( case when coalesce(${Gradebook_Exam_Score}
+                         ,${Gradebook_Homework_Score}
+                         ,${Gradebook_Quiz_Score}
+                         ,${Gradebook_Other_Score}) is not null
+      then ((
             coalesce(${Gradebook_Exam_Score}, 0)
             + coalesce(${Gradebook_Homework_Score}, 0)
             + coalesce(${Gradebook_Quiz_Score},0)
@@ -78,7 +82,8 @@ view: datascience_raw {
               + case when ${Gradebook_Homework_Score} is not null then 1 else 0 end
               + case when ${Gradebook_Quiz_Score} is not null then 1 else 0 end
               + case when ${Gradebook_Other_Score} is not null then 1 else 0 end
-              );;
+              ))
+      else 0 end );;
     value_format_name:  percent_1
     type: number
   }
