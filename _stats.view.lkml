@@ -7,7 +7,7 @@ include: "responses.view.lkml"
 # explore: student_assignment_stats {}
 # explore: class_question_stats {}
 # explore: student_question_stats {}
-# explore: class_weekly_stats {}
+ explore: class_weekly_stats {}
 # explore: student_weekly_stats {}
 # explore: question_stats {}
 
@@ -25,6 +25,10 @@ view: class_weekly_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: questions_correct_attempt_1 {field:responses.response_question_correct_attempt_1}
+      column: questions_correct_attempt_in_2 {field:responses.response_question_correct_attempt_in_2}
+      column: questions_correct_attempt_in_3 {field:responses.response_question_correct_attempt_in_3}
+      column: assignment_score {field:assignment_final.gradebook_score}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: start_recency {field:assignment_final.total_assignment_start_recency}
@@ -104,6 +108,34 @@ view: class_weekly_stats {
     sql: ${TABLE}.question_count ;;
     value_format_name: decimal_0
   }
+  measure: sum_questions_correct_attempt_1 {
+    description: "number of questions answered correctly on the first attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_1 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_2 {
+    description: "number of questions answered correctly on the first or second attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_2 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_3 {
+    description: "number of questions answered correctly in the first three attempts"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_3 ;;
+    value_format_name: decimal_0
+  }
+  measure: average_assignment_score {
+    description: "assignment score"
+    group_label: "Raw Metrics"
+    type: average
+    sql: ${TABLE}.assignment_score ;;
+    value_format_name: decimal_1
+  }
   measure: sum_questions_available {
     description: "number of times the questions were available (questions in assignment * students)"
     group_label: "Raw Metrics"
@@ -221,6 +253,27 @@ view: class_weekly_stats {
     group_label: "Calculations"
     type: number
     sql: ${sum_questions_correct} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_1 {
+    description: "% of questions correct first time"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_1} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_2 {
+    description: "% of questions correct first two attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_2} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_3 {
+    description: "% of questions correct first three attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_3} / NULLIF(${sum_questions_available}, 0) ;;
     value_format_name: percent_1
   }
   measure: percent_students_active {
@@ -277,9 +330,9 @@ view: student_weekly_stats {
   derived_table: {
     explore_source: sections {
       column: section_id {field: dim_section.section_id}
-      column: user_id {field: users.user_id}
       column: relative_week {field: responses_final.relative_week}
-      derived_column: pk {sql: HASH(section_id,'|',user_id,'|',relative_week);; }
+      column: user_id {field: users.user_id}
+      derived_column: pk {sql: HASH(section_id,'|',relative_week,'|',user_id);; }
       column: new_assignment_count {field: responses_final.new_assignment_count}
       column: assignment_duration {field:assignment_final.total_assignment_duration}
       column: assignment_submissions {field:responses.response_submission_count}
@@ -287,6 +340,10 @@ view: student_weekly_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: questions_correct_attempt_1 {field:responses.response_question_correct_attempt_1}
+      column: questions_correct_attempt_in_2 {field:responses.response_question_correct_attempt_in_2}
+      column: questions_correct_attempt_in_3 {field:responses.response_question_correct_attempt_in_3}
+      column: assignment_score {field:assignment_final.gradebook_score}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: start_recency {field:assignment_final.total_assignment_start_recency}
@@ -300,6 +357,9 @@ view: student_weekly_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_section.section_id}
+      sort: {field: responses_final.relative_week}
+      sort: {field: users.user_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -307,8 +367,8 @@ view: student_weekly_stats {
 
   dimension: pk {primary_key:yes hidden:yes}
   dimension: section_id {type: number hidden: no}
-  dimension: user_id {type: number hidden: no}
   dimension: relative_week {type: number hidden: no}
+  dimension: user_id {type: number hidden: no}
   measure: sum_assignment_duration {
     description: "elapsed time from start to finish (first and last response recorded)"
     group_label: "Raw Metrics"
@@ -364,6 +424,34 @@ view: student_weekly_stats {
     type: sum
     sql: ${TABLE}.question_count ;;
     value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_1 {
+    description: "number of questions answered correctly on the first attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_1 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_2 {
+    description: "number of questions answered correctly on the first or second attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_2 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_3 {
+    description: "number of questions answered correctly in the first three attempts"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_3 ;;
+    value_format_name: decimal_0
+  }
+  measure: average_assignment_score {
+    description: "assignment score"
+    group_label: "Raw Metrics"
+    type: average
+    sql: ${TABLE}.assignment_score ;;
+    value_format_name: decimal_1
   }
   measure: sum_questions_available {
     description: "number of times the questions were available (questions in assignment * students)"
@@ -482,6 +570,27 @@ view: student_weekly_stats {
     group_label: "Calculations"
     type: number
     sql: ${sum_questions_correct} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_1 {
+    description: "% of questions correct first time"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_1} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_2 {
+    description: "% of questions correct first two attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_2} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_3 {
+    description: "% of questions correct first three attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_3} / NULLIF(${sum_questions_available}, 0) ;;
     value_format_name: percent_1
   }
   measure: average_assignment_time_on_task {
@@ -540,6 +649,7 @@ view: class_assignment_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: assignment_score {field:assignment_final.gradebook_score}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: start_recency {field:assignment_final.total_assignment_start_recency}
@@ -551,6 +661,8 @@ view: class_assignment_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_section.section_id}
+      sort: {field: dim_assignment.assignment_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -614,6 +726,13 @@ view: class_assignment_stats {
     type: sum
     sql: ${TABLE}.question_count ;;
     value_format_name: decimal_0
+  }
+  measure: average_assignment_score {
+    description: "assignment score"
+    group_label: "Raw Metrics"
+    type: average
+    sql: ${TABLE}.assignment_score ;;
+    value_format_name: decimal_1
   }
   measure: sum_questions_available {
     description: "number of times the questions were available (questions in assignment * students)"
@@ -763,6 +882,7 @@ view: student_assignment_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: assignment_score {field:assignment_final.gradebook_score}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: start_recency {field:assignment_final.total_assignment_start_recency}
@@ -774,6 +894,9 @@ view: student_assignment_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_section.section_id}
+      sort: {field: users.user_id}
+      sort: {field: dim_assignment.assignment_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -838,6 +961,13 @@ view: student_assignment_stats {
     type: sum
     sql: ${TABLE}.question_count ;;
     value_format_name: decimal_0
+  }
+  measure: average_assignment_score {
+    description: "assignment score"
+    group_label: "Raw Metrics"
+    type: average
+    sql: ${TABLE}.assignment_score ;;
+    value_format_name: decimal_1
   }
   measure: sum_questions_available {
     description: "number of times the questions were available (questions in assignment * students)"
@@ -992,6 +1122,9 @@ view: question_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: questions_correct_attempt_1 {field:responses.response_question_correct_attempt_1}
+      column: questions_correct_attempt_in_2 {field:responses.response_question_correct_attempt_in_2}
+      column: questions_correct_attempt_in_3 {field:responses.response_question_correct_attempt_in_3}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: start_recency {field:assignment_final.total_assignment_start_recency}
@@ -1003,6 +1136,7 @@ view: question_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_question.question_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -1064,6 +1198,27 @@ view: question_stats {
     group_label: "Raw Metrics"
     type: sum
     sql: ${TABLE}.question_count ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_1 {
+    description: "number of questions answered correctly on the first attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_1 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_2 {
+    description: "number of questions answered correctly on the first or second attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_2 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_3 {
+    description: "number of questions answered correctly in the first three attempts"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_3 ;;
     value_format_name: decimal_0
   }
   measure: sum_questions_available {
@@ -1171,6 +1326,27 @@ view: question_stats {
     sql: ${sum_questions_correct} / NULLIF(${sum_questions_available}, 0) ;;
     value_format_name: percent_1
   }
+  measure: percent_correct_attempt_1 {
+    description: "% of questions correct first time"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_1} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_2 {
+    description: "% of questions correct first two attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_2} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_3 {
+    description: "% of questions correct first three attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_3} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
   measure: percent_students_active {
     description: "% of students who did this"
     group_label: "Calculations"
@@ -1231,6 +1407,8 @@ view: class_question_stats {
       column: started_after_due {field:assignment_final.started_after_due}
       column: missed_assignments {field:assignment_final.missed_assignments}
       column: late_submissions {field:assignment_final.late_submissions}
+      sort: {field: dim_section.section_id}
+      sort: {field: dim_question.question_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -1441,12 +1619,18 @@ view: student_question_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: questions_correct_attempt_1 {field:responses.response_question_correct_attempt_1}
+      column: questions_correct_attempt_in_2 {field:responses.response_question_correct_attempt_in_2}
+      column: questions_correct_attempt_in_3 {field:responses.response_question_correct_attempt_in_3}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: total_assignments {field:dim_deployment.count}
       column: assignments_worked_on {field:responses.assignment_count}
       column: student_count {field:users.usercount}
       column: active_student_count {field:responses.user_count}
+      sort: {field: dim_section.section_id}
+      sort: {field: users.user_id}
+      sort: {field: dim_question.question_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -1496,6 +1680,27 @@ view: student_question_stats {
     group_label: "Raw Metrics"
     type: sum
     sql: ${TABLE}.question_count ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_1 {
+    description: "number of questions answered correctly on the first attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_1 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_2 {
+    description: "number of questions answered correctly on the first or second attempt"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_2 ;;
+    value_format_name: decimal_0
+  }
+  measure: sum_questions_correct_attempt_in_3 {
+    description: "number of questions answered correctly in the first three attempts"
+    group_label: "Raw Metrics"
+    type: sum
+    sql: ${TABLE}.questions_correct_attempt_in_3 ;;
     value_format_name: decimal_0
   }
   measure: sum_questions_available {
@@ -1561,6 +1766,27 @@ view: student_question_stats {
     sql: ${sum_questions_answered} / NULLIF(${sum_questions_available}, 0) ;;
     value_format_name: percent_1
   }
+  measure: percent_correct_attempt_1 {
+    description: "% of questions correct first time"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_1} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_2 {
+    description: "% of questions correct first two attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_2} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
+  measure: percent_correct_attempt_in_3 {
+    description: "% of questions correct first three attempts"
+    group_label: "Calculations"
+    type: number
+    sql: ${sum_questions_correct_attempt_in_3} / NULLIF(${sum_questions_available}, 0) ;;
+    value_format_name: percent_1
+  }
   measure: percent_students_active {
     description: "% of students who did this"
     group_label: "Calculations"
@@ -1585,6 +1811,7 @@ view: class_stats {
       column: assignments_worked_on {field:responses.assignment_count}
       column: student_count {field:users.usercount}
       column: active_student_count {field:responses.user_count}
+      sort: {field: dim_section.section_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -1722,11 +1949,13 @@ view: assignment_stats {
       column: questions_correct {field:responses.response_question_correct_count}
       column: questions_answered {field:responses.response_question_answered_count}
       column: question_count {field:responses.response_question_count}
+      column: assignment_score {field:assignment_final.gradebook_score}
       derived_column: questions_available {sql: question_count * student_count;;}
       column: total_attempts {field:responses.count}
       column: total_assignments {field:dim_deployment.count}
       column: student_count {field:users.usercount}
       column: active_student_count {field:responses.user_count}
+      sort: {field: dim_assignment.assignment_id}
     }
     datagroup_trigger: responses_datagroup
   }
@@ -1775,6 +2004,13 @@ view: assignment_stats {
     type: sum
     sql: ${TABLE}.question_count ;;
     value_format_name: decimal_0
+  }
+  measure: average_assignment_score {
+    description: "assignment score"
+    group_label: "Raw Metrics"
+    type: average
+    sql: ${TABLE}.assignment_score ;;
+    value_format_name: decimal_1
   }
   measure: sum_questions_available {
     description: "number of times the questions were available (questions in assignment * students)"

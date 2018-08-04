@@ -5,16 +5,26 @@ include: "webassign.dims.model.lkml"
 explore: datascience_raw {
 }
 
-explore: sections_students_assignments {
-  extends: [dim_question]
-  extension: required
+explore: gradebook {
+  join: gbcolumns {
+    view_label: "Gradebook - Columns"
+    sql_on: ${gradebook.gbcolid} = ${gbcolumns.gbcolid} ;;
+    relationship: many_to_one
+  }
+  join: categories {
+    view_label: "Gradebook - Categories"
+    fields: [name, category]
+    sql_on: ${gbcolumns.category_id} = ${categories.id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: sections_students {
+  #extension: required
   from: dim_section
   view_name: dim_section
-  sql_always_where: ${dim_textbook.code} in ('SCalcET8', 'SCalc8')--, 'SCalcET7', 'SCalc7')
-                  --and ${dim_section.start_date_raw} >= dateadd(month, -6, current_timestamp())
-                  ;;
 
-  # get list of students on course
+# get list of students on course
   join: roster {
     fields: [roster.dropped]
     from: roster_extended
@@ -30,11 +40,31 @@ explore: sections_students_assignments {
     relationship: many_to_one
   }
 
+  join: gradebook_final {
+    sql_on: ${dim_section.section_id} = ${gradebook_final.section_id}
+        and ${users.user_id} = ${gradebook_final.user_id};;
+    relationship: one_to_one
+  }
+
+}
+
+explore: sections_students_assignments {
+  extends: [sections_students, dim_textbook, dim_question]
+  extension: required
+  from: dim_section
+  view_name: dim_section
+
+#   join: section_weeks {
+#     sql_on: ${dim_section.section_id} = ${section_weeks.section_id} ;;
+#   }
+
   # get list of assignments on course
   join: dim_deployment {
     fields: [dim_deployment.due_et_raw, dim_deployment.count, dim_deployment.relative_week]
     view_label: "Assignment"
-    sql_on: ${dim_section.section_id} = ${dim_deployment.section_id};;
+    sql_on: ${dim_section.section_id} = ${dim_deployment.section_id}
+    ;;
+    #--      and ${section_weeks.relative_week} = ${dim_deployment.relative_week}
     relationship: one_to_many
   }
 
@@ -56,56 +86,19 @@ explore: sections_students_assignments {
     relationship: many_to_one
   }
 
-# get gradebook data
-  join: gbcolumns {
-    view_label: "Gradebook"
-    fields: []
-    sql_on: ${dim_section.section_id} = ${gbcolumns.section} ;;
-    relationship: many_to_one
-  }
-  join: gradebook {
-    view_label: "Gradebook"
-    sql_on: ${users.user_id} = ${gradebook.user}
-      and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
-    relationship: many_to_one
-  }
-  join: categories {
-    fields: []
-    view_label: "Gradebook"
-    sql_on: ${gbcolumns.col} = ${categories.id} ;;
+  join: dim_textbook {
+    sql_on: ${dim_section.dim_textbook_id} = ${dim_textbook.dim_textbook_id} ;;
     relationship: many_to_one
   }
 
-}
-
-explore: student_metrics {
-  from: datascience_course_filter
-  view_name: datascience_course_filter
-  extends: [sections_students_assignments]
-
-  join: dim_section {
-    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
-    relationship: one_to_one
-    type: inner
-  }
-
-  join: class_weekly_stats {
-    sql_on: ${dim_section.section_id} = ${class_weekly_stats.section_id} ;;
-    relationship: one_to_many
-  }
-
-  #join: class_assignment_stats {}
-
-  join: student_weekly_stats {
-    sql_on: ${dim_section.section_id} = ${student_weekly_stats.section_id}
-          and ${users.user_id} = ${student_weekly_stats.user_id}
-          and ${class_weekly_stats.relative_week} = ${student_weekly_stats.relative_week} ;;
-    relationship: one_to_one
-  }
 }
 
 explore: sections {
   extends: [sections_students_assignments]
+
+  sql_always_where: ${dim_textbook.code} in ('SCalcET8', 'SCalc8')--, 'SCalcET7', 'SCalc7')
+  --and ${dim_section.start_date_raw} >= dateadd(month, -6, current_timestamp())
+  ;;
 
   # get student results - assignment level
   join: assignment_final {
@@ -135,26 +128,36 @@ explore: sections {
     relationship: one_to_many
   }
 
+}
 
+explore: student_metrics {
+  from: datascience_course_filter
+  view_name: datascience_course_filter
+  extends: [sections_students]
 
-#   # get gradebook data
-#   join: gbcolumns {
-#     view_label: "Gradebook"
-#     fields: []
-#     sql_on: ${dim_section.section_id} = ${gbcolumns.section} ;;
-#     relationship: many_to_one
-#   }
-#   join: gradebook {
-#     view_label: "Gradebook"
-#     sql_on: ${responses.userid} = ${gradebook.user}
-#       and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
-#     relationship: many_to_one
-#   }
-#   join: categories {
-#     fields: []
-#     view_label: "Gradebook"
-#     sql_on: ${gbcolumns.col} = ${categories.id} ;;
-#     relationship: many_to_one
-#   }
+  join: dim_section {
+    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
+    relationship: one_to_one
+    type: inner
+  }
 
+  join: dim_textbook {
+    view_label: "Textbook"
+    sql_on: ${dim_section.dim_textbook_id} = ${dim_textbook.dim_textbook_id};;
+    relationship: many_to_one
+  }
+
+  join: class_weekly_stats {
+    sql_on: ${dim_section.section_id} = ${class_weekly_stats.section_id};;
+    relationship: one_to_many
+  }
+
+  #join: class_assignment_stats {}
+
+  join: student_weekly_stats {
+    sql_on: ${dim_section.section_id} = ${student_weekly_stats.section_id}
+          and ${users.user_id} = ${student_weekly_stats.user_id}
+          and ${class_weekly_stats.relative_week} = ${student_weekly_stats.relative_week} ;;
+    relationship: one_to_one
+  }
 }

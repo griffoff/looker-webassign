@@ -8,6 +8,18 @@ datagroup: responses_datagroup {
   sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;
 }
 
+datagroup: responses_dependencies_datagroup {
+  sql_trigger: select count(*) from ${responses.SQL_TABLE_NAME} ;;
+}
+
+datagroup: stats_datagroup {
+  sql_trigger: select count(*) from ${class_weekly_stats.SQL_TABLE_NAME} ;;
+}
+
+datagroup: gradebook_datagroup {
+  sql_trigger: select count(*) from ${gradebook.SQL_TABLE_NAME} ;;
+}
+
 explore: dim_textbook {
   extension: required
   join: dim_discipline {

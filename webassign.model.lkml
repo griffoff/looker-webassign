@@ -11,37 +11,38 @@ case_sensitive: no
 
 explore: fivetran_audit {}
 
-explore: gradebook_base {
-  extension: required
-  from: gradebook
-  view_name: gradebook
-
-  join: users {
-    sql_on: ${gradebook.user} = ${users.id} ;;
-    relationship: many_to_one
-  }
-
-  join: categories {
-    sql_on: ${gbcolumns.col} = ${categories.id} ;;
-    relationship: many_to_one
-  }
-
-}
-
-explore: gradebook {
-  extends: [gradebook_base]
-  label: "Gradebook"
-
-  join: gbcolumns {
-    sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid};;
-    relationship: many_to_one
-  }
-
-  join: dim_section {
-    sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
-    relationship: many_to_one
-  }
-}
+# explore: gradebook_base {
+#   extension: required
+#   from: gradebook
+#   view_name: gradebook
+#
+#   join: users {
+#     sql_on: ${gradebook.user} = ${users.id} ;;
+#     relationship: many_to_one
+#   }
+#
+#   join: categories {
+#     sql_on: ${gbcolumns.col} = ${categories.id} ;;
+#     relationship: many_to_one
+#   }
+#
+# }
+#
+# explore: gradebook {
+#   extends: [gradebook_base]
+#   label: "Gradebook"
+#
+#   join: gbcolumns {
+#     sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid}
+#             and ${gbcolumns.object} = 20;;
+#     relationship: many_to_one
+#   }
+#
+#   join: dim_section {
+#     sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
+#     relationship: many_to_one
+#   }
+# }
 
 explore: responses {
   extends: [dim_question, dim_deployment]
@@ -66,21 +67,11 @@ explore: responses {
     relationship: many_to_one
   }
 
-  join: gbcolumns {
-    #fields: []
-    sql_on: ${dim_section.section_id} = ${gbcolumns.section} ;;
-    relationship: many_to_one
-  }
-
-  join: gradebook {
-    sql_on: ${responses.userid} = ${gradebook.user}
-      and  ${gbcolumns.gbcolid} = ${gradebook.gbcolid};;
-    relationship: many_to_one
-  }
-
-  join: categories {
-    view_label: "gbcategories"
-    sql_on: ${gbcolumns.col} = ${categories.id} ;;
+  join: gradebook_assignment {
+    view_label: "Gradebook"
+    sql_on: ${dim_section.section_id} = ${gradebook_assignment.section_id}
+          and  ${responses.userid} = ${gradebook_assignment.user_id}
+          and  ${responses.deployment_id} = ${gradebook_assignment.deployment_id};;
     relationship: many_to_one
   }
 

@@ -6,6 +6,10 @@ view: assignment_final {
       column: userid {}
       column: deployment_id {}
       column: total_score {field:responses.score}
+      column: gradebook_score{field: gradebook_assignment.average_score}
+      column: homework_score{field: gradebook_assignment.homework_score}
+      column: exam_score{field: gradebook_assignment.exam_score}
+      column: gradebook_category{field: gradebook_assignment.category_group}
       column: assignment_start {field:responses.min_attempt_start}
       column: assignment_finish {field:responses.max_attempt_finish}
       derived_column: assignment_duration { sql: datediff(second, assignment_start, assignment_finish) / 3600 / 24;;}
@@ -21,7 +25,7 @@ view: assignment_final {
       sort: {field:userid}
       sort: {field:deployment_id}
     }
-    datagroup_trigger: responses_datagroup
+    datagroup_trigger: responses_dependencies_datagroup
   }
 
   dimension: weeks_relative_to_course_start {
@@ -44,6 +48,17 @@ view: assignment_final {
   dimension: assignment_start {type: date_raw}
   dimension: assignment_finish {type: date_raw}
   dimension: assignment_duration {type: number}
+
+  dimension: gradebook_score {type:number}
+  dimension: gradebook_category {type:string}
+  dimension: homework_score {type:number}
+  dimension: exam_score {type:number}
+
+  measure: gradebook_score_average  {
+      type: average
+      sql: ${gradebook_score} ;;
+      value_format_name: percent_1
+  }
 
   measure: average_assignment_duration {
     type: average

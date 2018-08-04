@@ -43,20 +43,24 @@ view: responses {
               --  ,listagg(
               --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
               --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
-                ,array_to_string(
-                  array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
-                  , '\n') as all_attempt_starts
-                ,array_to_string(array_agg(
-                    object_construct(
-                      'attempt', attempt_num
-                      ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-                      ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-                      ,'points scored', points_scored
-                      ,'override', override_score
-                    )
-                  ) within group (order by attempt_num)
-                ,'\n*********\n')
-                as all_attempts
+                ,max(case when attempt_num = 1 then is_correct else 0 end) as correct_attempt_1
+                ,max(case when attempt_num <= 2 then is_correct else 0 end) as correct_attempt_in_2
+                ,max(case when attempt_num <= 3 then is_correct else 0 end) as correct_attempt_in_3
+              --  ,array_to_string(
+              --    array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+              --    , '\n')
+              ,'TO DO' as all_attempt_starts
+              --  ,array_to_string(array_agg(
+              --      object_construct(
+              --        'attempt', attempt_num
+              --        ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --        ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --        ,'points scored', points_scored
+              --        ,'override', override_score
+              --      )
+              --    ) within group (order by attempt_num)
+              --  ,'\n*********\n')
+              ,'TO DO'  as all_attempts
             from r
             inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
             group by 1, 2, 3, 4
@@ -75,6 +79,9 @@ view: responses {
             ,f.avg_time_secs
             ,f.all_attempt_starts
             ,f.all_attempts
+            ,f.correct_attempt_1
+            ,f.correct_attempt_in_2
+            ,f.correct_attempt_in_3
         from r
         inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
         left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
@@ -260,16 +267,43 @@ view: responses {
     drill_fields: [dim_question.question_id,iscorrect,attemptnumber]
   }
 
+  dimension: question_user_key {
+    hidden: yes
+    type: string
+    sql: hash(${questionid}, ${boxnum}, ${userid}) ;;
+  }
+
   measure: response_question_correct_count {
     label: "# Unique questions answered correctly"
     type: count_distinct
-    sql: case when ${iscorrect} then hash(${questionid}, ${boxnum}, ${userid}) end ;;
+    sql: case when ${iscorrect} then ${question_user_key} end ;;
   }
 
   measure: response_question_answered_count {
     label: "# Unique questions answered correctly"
     type: count_distinct
-    sql: hash(${questionid}, ${boxnum}, ${userid}) ;;
+    sql: ${question_user_key} ;;
+  }
+
+  measure: response_question_correct_attempt_1 {
+    label: "# questions correct on the first attempt"
+    type: sum
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.correct_attempt_1 = 1 then ${question_user_key} end ;;
+  }
+
+  measure: response_question_correct_attempt_in_2 {
+    label: "# questions correct within first 2 attempts"
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.correct_attempt_in_2 = 1 then ${question_user_key} end ;;
+  }
+
+  measure: response_question_correct_attempt_in_3 {
+    label: "# questions correct within first 3 attempts"
+    type: count_distinct
+    value_format_name: decimal_0
+    sql: case when ${TABLE}.correct_attempt_in_3 = 1 then ${question_user_key} end ;;
   }
 
   measure: percentcorrect {
