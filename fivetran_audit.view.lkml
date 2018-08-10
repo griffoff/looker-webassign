@@ -16,6 +16,7 @@ view: fivetran_audit {
         select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from wa_app_v4net.fivetran_audit
       ;;
+    persist_for: "1 hour"
   }
 
 }
