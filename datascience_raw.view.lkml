@@ -222,4 +222,7 @@ view: datascience_raw {
     value_format_name: decimal_0
     type: number
   }
+  measure: count {
+    type: count
+  }
 }

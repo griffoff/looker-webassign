@@ -9,15 +9,22 @@ datagroup: responses_datagroup {
 }
 
 datagroup: responses_dependencies_datagroup {
-  sql_trigger: select count(*) from ${responses.SQL_TABLE_NAME} ;;
+  sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;
+  #not supported yet
+  #sql_trigger: select count(*) from ${responses.SQL_TABLE_NAME} ;;
+  max_cache_age: "24 hours"
 }
 
 datagroup: stats_datagroup {
-  sql_trigger: select count(*) from ${class_weekly_stats.SQL_TABLE_NAME} ;;
+  sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;
+  #sql_trigger: select count(*) from ${class_weekly_stats.SQL_TABLE_NAME} ;;
+  #max_cache_age: "24 hours"
 }
 
 datagroup: gradebook_datagroup {
-  sql_trigger: select count(*) from ${gradebook.SQL_TABLE_NAME} ;;
+  sql_trigger: select count(*) from wa_app_activity.RESPONSES ;;
+  #sql_trigger: select count(*) from ${gradebook.SQL_TABLE_NAME} ;;
+  #max_cache_age: "24 hours"
 }
 
 explore: dim_textbook {
