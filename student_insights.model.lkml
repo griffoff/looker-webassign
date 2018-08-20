@@ -2,9 +2,6 @@ include: "*.view.lkml"         # include all views in this project
 
 include: "webassign.dims.model.lkml"
 
-explore: datascience_raw {
-}
-
 explore: gradebook {
   join: gbcolumns {
     view_label: "Gradebook - Columns"
@@ -63,6 +60,7 @@ explore: sections_students_assignments {
     fields: [dim_deployment.due_et_raw, dim_deployment.count, dim_deployment.relative_week]
     view_label: "Assignment"
     sql_on: ${dim_section.section_id} = ${dim_deployment.section_id}
+        --and ${dim_deployment.has_response}
     ;;
     #--      and ${section_weeks.relative_week} = ${dim_deployment.relative_week}
     relationship: one_to_many
@@ -94,11 +92,15 @@ explore: sections_students_assignments {
 }
 
 explore: sections {
+  from: datascience_course_filter
+  view_name: datascience_course_filter
   extends: [sections_students_assignments]
 
-  sql_always_where: ${dim_textbook.code} in ('SCalcET8', 'SCalc8')--, 'SCalcET7', 'SCalc7')
-  --and ${dim_section.start_date_raw} >= dateadd(month, -6, current_timestamp())
-  ;;
+  join: dim_section {
+    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
+    relationship: one_to_one
+    type: inner
+  }
 
   # get student results - assignment level
   join: assignment_final {
@@ -128,36 +130,4 @@ explore: sections {
     relationship: one_to_many
   }
 
-}
-
-explore: student_metrics {
-  from: datascience_course_filter
-  view_name: datascience_course_filter
-  extends: [sections_students]
-
-  join: dim_section {
-    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
-    relationship: one_to_one
-    type: inner
-  }
-
-  join: dim_textbook {
-    view_label: "Textbook"
-    sql_on: ${dim_section.dim_textbook_id} = ${dim_textbook.dim_textbook_id};;
-    relationship: many_to_one
-  }
-
-  join: class_weekly_stats {
-    sql_on: ${dim_section.section_id} = ${class_weekly_stats.section_id};;
-    relationship: one_to_many
-  }
-
-  #join: class_assignment_stats {}
-
-  join: student_weekly_stats {
-    sql_on: ${dim_section.section_id} = ${student_weekly_stats.section_id}
-          and ${users.user_id} = ${student_weekly_stats.user_id}
-          and ${class_weekly_stats.relative_week} = ${student_weekly_stats.relative_week} ;;
-    relationship: one_to_one
-  }
 }

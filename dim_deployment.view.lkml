@@ -1,6 +1,17 @@
 view: dim_deployment {
   label: "Deployment"
-  sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT ;;
+#   sql_table_name: FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT ;;
+  derived_table: {
+    sql:
+      select d.*, d1.first_response_et is not null as has_response, d1.first_response_et
+      from FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT d
+      left join (
+        select deployment_id, min(created_at) as first_response_et
+        from ${responses.SQL_TABLE_NAME}
+        group by 1
+      ) d1 on d.deployment_id = d1.deployment_id;;
+      sql_trigger_value: select count(*) from FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT ;;
+  }
 
   dimension: dim_deployment_id {
     primary_key: yes
@@ -23,6 +34,10 @@ view: dim_deployment {
     sql: ${TABLE}.AVAILABLE ;;
   }
 
+  dimension: has_response {
+    type: yesno
+  }
+
   dimension_group: begins_et {
     type: time
     timeframes: [
@@ -34,7 +49,7 @@ view: dim_deployment {
       quarter,
       year
     ]
-    sql: ${TABLE}.BEGINS_ET ;;
+    sql: COALESCE(${TABLE}.first_response_et, ${TABLE}.BEGINS_ET) ;;
   }
 
   dimension_group: date_from {

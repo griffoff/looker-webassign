@@ -1,4 +1,4 @@
-#explore: datascience_course_filter{}
+explore: datascience_course_filter{}
 
 view: datascience_course_filter {
   derived_table: {
@@ -6,6 +6,7 @@ view: datascience_course_filter {
       with sections as (
         SELECT dim_section.section_id
               ,dim_section.ends_eastern
+              ,dim_section.starts_eastern
               ,count(*) as students
               ,count(case when roster.dropdate < dim_section.ends_eastern then 1 end) as drop_count
               ,count(case when roster.dropdate >= dim_section.ends_eastern then 1 end) as notdrop_count
@@ -17,13 +18,15 @@ view: datascience_course_filter {
           and dim_section.gb_configured = 'yes'
           and dim_section.gb_has_data = 'yes'
           --and section_id in (select section_id from ${section_weeks.SQL_TABLE_NAME})
-        group by 1, 2
+        group by 1, 2, 3
         having notdrop_count >= 20
         )
       ,completed as (
         select
             section_id
             ,students
+            ,starts_eastern
+            ,ends_eastern
             ,drop_count
             ,notdrop_count
             ,percent_rank() over (order by random(0.1)) as p
@@ -38,6 +41,8 @@ view: datascience_course_filter {
       select
           section_id
           ,students
+          ,starts_eastern
+          ,ends_eastern
           ,drop_count
           ,notdrop_count
           ,null as p
@@ -52,5 +57,22 @@ view: datascience_course_filter {
 
     dimension: section_id {type:number primary_key:yes}
     dimension: set_type {type:string}
+    dimension_group: start {
+      type: time
+      timeframes: [
+        date,month,year
+      ]
+      sql: ${TABLE}.starts_eastern ;;
+    }
+    dimension_group: end {
+      type: time
+      timeframes: [
+        date,month,year
+      ]
+      sql: ${TABLE}.ends_eastern ;;
+    }
     measure: count {type:count}
+    measure: student_count {type:sum sql:${TABLE}.students;;}
+    measure: drop_count {type:sum }
+    measure: notdrop_count {type:sum }
   }

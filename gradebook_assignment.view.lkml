@@ -1,4 +1,5 @@
-explore: gradebook_assignment{}
+#include:"student_insights.model.lkml"
+#explore: gradebook_assignment{}
 
 view: gradebook_assignment {
 
