@@ -1,10 +1,23 @@
 view: dim_section {
   view_label: "Section"
   derived_table: {
-    sql: select time.cdate,sec.* from
-      FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION  sec
+    sql:
+      with dates as (
+        select section_id, min(created_at) as first_response_et, max(created_at) as last_response_et
+        from LOOKER_SCRATCH.LR$6T4EEROGPZFRVZC2GMPOH_responses r
+        inner join FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT d on r.deployment_id = d.deployment_id
+        group by 1
+      )
+      select
+        time.cdate,sec.*
+          ,case when abs(datediff(week, sec.starts_eastern, dates.first_response_et)) > 1 then dates.first_response_et end as alternative_starts_eastern
+          ,dates.first_response_et
+          ,dates.last_response_et
+      from FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION sec
       left join  FT_OLAP_REGISTRATION_REPORTS.DIM_TIME time
-      on sec.dim_time_id_starts = time.dim_time_id
+            on sec.dim_time_id_starts = time.dim_time_id
+      left join dates on sec.section_id = dates.section_id
+
        ;;
     sql_trigger_value:  select count(*) from FT_OLAP_REGISTRATION_REPORTS.DIM_SECTION;;
   }
@@ -393,7 +406,7 @@ view: dim_section {
 
   dimension: start_date_raw {
     type: date_raw
-    sql:  ${TABLE}.STARTS_EASTERN ;;
+    sql:  COALESCE(${TABLE}.alternative_starts_eastern, ${TABLE}.STARTS_EASTERN) ;;
     hidden: yes
   }
 

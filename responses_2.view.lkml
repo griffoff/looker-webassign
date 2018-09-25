@@ -1,19 +1,19 @@
-view: responses {
+view: responses_2 {
 #  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
- derived_table: {
+  derived_table: {
 #     sql:
 #       select
 #         to_date("CREATED_AT") as Submission_Date,*
 #       from wa_app_activity.responses
 #       where to_date("CREATED_AT") > '2016-01-01' ;;
-    sql:
+  sql:
        with r as (
             select
               *
               ,datediff(second, created_at, updated_at) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from wa_app_activity.RESPONSES
+            from webassign.wa_app_activity.RESPONSES
             where CREATED_AT >= '2017-01-01'
         )
       ,q as (
@@ -43,24 +43,20 @@ view: responses {
               --  ,listagg(
               --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
               --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
-                ,max(case when attempt_num = 1 then is_correct else 0 end) as correct_attempt_1
-                ,max(case when attempt_num <= 2 then is_correct else 0 end) as correct_attempt_in_2
-                ,max(case when attempt_num <= 3 then is_correct else 0 end) as correct_attempt_in_3
-              --  ,array_to_string(
-              --    array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
-              --    , '\n')
-              ,'TO DO' as all_attempt_starts
-              --  ,array_to_string(array_agg(
-              --      object_construct(
-              --        'attempt', attempt_num
-              --        ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --        ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --        ,'points scored', points_scored
-              --        ,'override', override_score
-              --      )
-              --    ) within group (order by attempt_num)
-              --  ,'\n*********\n')
-              ,'TO DO'  as all_attempts
+                ,array_to_string(
+                  array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+                  , '\n') as all_attempt_starts
+                ,array_to_string(array_agg(
+                    object_construct(
+                      'attempt', attempt_num
+                      ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                      ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                      ,'points scored', points_scored
+                      ,'override', override_score
+                    )
+                  ) within group (order by attempt_num)
+                ,'\n*********\n')
+                as all_attempts
             from r
             inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
             group by 1, 2, 3, 4
@@ -79,27 +75,25 @@ view: responses {
             ,f.avg_time_secs
             ,f.all_attempt_starts
             ,f.all_attempts
-            ,f.correct_attempt_1
-            ,f.correct_attempt_in_2
-            ,f.correct_attempt_in_3
         from r
         inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
         left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
 
       ;;
 
-      datagroup_trigger: responses_datagroup
-    }
+      #sql_trigger_value: select count(*) from wa_app_activity.RESPONSES ;;
+    datagroup_trigger: responses_datagroup
+  }
 
 
-    set: all {fields: [id, userid, attemptnumber, iscorrect]}
+  set: all {fields: [id, userid, attemptnumber, iscorrect]}
 
-    dimension: id {
-      primary_key: yes
-      type: number
-      sql: ${TABLE}.ID ;;
-      hidden: yes
-    }
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.ID ;;
+    hidden: yes
+  }
 
 #     dimension: reverse_attemptnumber {
 #       label: "Reverse Attempt Number"
@@ -257,7 +251,7 @@ view: responses {
     type: sum
 #       sql:SELECT COUNT(*) FROM ${responses.SQL_TABLE_NAME}
 #       WHERE ${TABLE}.IS_CORRECT = 0 ;;
-  sql: CASE WHEN not ${iscorrect} THEN 1 END ;;
+    sql: CASE WHEN not ${iscorrect} THEN 1 END ;;
   }
 
   measure: numbercorrect {
@@ -267,43 +261,16 @@ view: responses {
     drill_fields: [dim_question.question_id,iscorrect,attemptnumber]
   }
 
-  dimension: question_user_key {
-    hidden: yes
-    type: string
-    sql: hash(${questionid}, ${boxnum}, ${userid}) ;;
-  }
-
   measure: response_question_correct_count {
     label: "# Unique questions answered correctly"
     type: count_distinct
-    sql: case when ${iscorrect} then ${question_user_key} end ;;
+    sql: case when ${iscorrect} then hash(${questionid}, ${boxnum}, ${userid}) end ;;
   }
 
   measure: response_question_answered_count {
     label: "# Unique questions answered correctly"
     type: count_distinct
-    sql: ${question_user_key} ;;
-  }
-
-  measure: response_question_correct_attempt_1 {
-    label: "# questions correct on the first attempt"
-    type: sum
-    value_format_name: decimal_0
-    sql: case when ${TABLE}.correct_attempt_1 = 1 then ${question_user_key} end ;;
-  }
-
-  measure: response_question_correct_attempt_in_2 {
-    label: "# questions correct within first 2 attempts"
-    type: count_distinct
-    value_format_name: decimal_0
-    sql: case when ${TABLE}.correct_attempt_in_2 = 1 then ${question_user_key} end ;;
-  }
-
-  measure: response_question_correct_attempt_in_3 {
-    label: "# questions correct within first 3 attempts"
-    type: count_distinct
-    value_format_name: decimal_0
-    sql: case when ${TABLE}.correct_attempt_in_3 = 1 then ${question_user_key} end ;;
+    sql: hash(${questionid}, ${boxnum}, ${userid}) ;;
   }
 
   measure: percentcorrect {

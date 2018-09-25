@@ -5,7 +5,7 @@ view: assignment_questions {
       column: question_id {field:dim_question.question_id}
       column: box_num {field: responses.boxnum}
     }
-    datagroup_trigger: responses_datagroup
+    datagroup_trigger: responses_dependencies_datagroup
   }
 
   dimension: assignment_id {type:number}

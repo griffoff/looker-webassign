@@ -30,7 +30,7 @@ view: responses_final {
         value: "Yes"
       }
     }
-    datagroup_trigger: responses_datagroup
+    datagroup_trigger: responses_dependencies_datagroup
   }
 
   set: details {fields: [questionid, boxnum, question_start, attempts, iscorrect, final_score, qdiff_avg_attempts]}

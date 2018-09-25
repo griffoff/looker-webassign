@@ -27,6 +27,16 @@ view: gbcolumns {
     sql: ${TABLE}.COL::string ;;
   }
 
+  dimension: category_id {
+    type: number
+    sql: try_cast(regexp_replace(${col}, '\\D', '') as int);;
+  }
+
+  dimension: record_type {
+    type: string
+    sql: case when try_cast(${col} as int) is null then 'assignment result' else 'student average' end ;;
+  }
+
   dimension: gbcolid {
     type: number
     value_format_name: id
