@@ -11,39 +11,6 @@ case_sensitive: no
 
 explore: fivetran_audit {}
 
-# explore: gradebook_base {
-#   extension: required
-#   from: gradebook
-#   view_name: gradebook
-#
-#   join: users {
-#     sql_on: ${gradebook.user} = ${users.id} ;;
-#     relationship: many_to_one
-#   }
-#
-#   join: categories {
-#     sql_on: ${gbcolumns.col} = ${categories.id} ;;
-#     relationship: many_to_one
-#   }
-#
-# }
-#
-# explore: gradebook {
-#   extends: [gradebook_base]
-#   label: "Gradebook"
-#
-#   join: gbcolumns {
-#     sql_on:  ${gradebook.gbcolid} = ${gbcolumns.gbcolid}
-#             and ${gbcolumns.object} = 20;;
-#     relationship: many_to_one
-#   }
-#
-#   join: dim_section {
-#     sql_on: ${gbcolumns.section} = ${dim_section.section_id};;
-#     relationship: many_to_one
-#   }
-# }
-
 explore: responses {
   extends: [dim_question, dim_deployment]
   label: "Sudent Take Analysis"
