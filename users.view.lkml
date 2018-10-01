@@ -96,6 +96,16 @@ view: users {
     drill_fields: [id, username, fullname, firstname, lastname]
   }
 
+  measure: distinct_email{
+    type:  count_distinct
+    sql: ${email} ;;
+  }
+
+  measure: distinct_SSO_GUIDs {
+    type: count_distinct
+    sql: ${sso_guid} ;;
+  }
+
 #   measure: user_count {
 #     label: "# Distinct Users"
 #     description: "# distint users who have accessed an item from a section"
