@@ -22,6 +22,11 @@ view: fivetran_audit {
   dimension: database_name {
     sql:'WEBASSIGN' ;;
   }
+  measure: db_rows_updated_or_inserted {
+    label: "WebAssign"
+    type: number
+    sql: ${rows_updated_or_inserted} ;;
+  }
 
 }
 
