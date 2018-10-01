@@ -19,6 +19,10 @@ view: fivetran_audit {
     persist_for: "1 hour"
   }
 
+  dimension: database_name {
+    sql:'WEBASSIGN' ;;
+  }
+
 }
 
 
