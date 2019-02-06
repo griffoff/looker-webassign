@@ -92,15 +92,15 @@ explore: sections_students_assignments {
 }
 
 explore: sections {
-  from: datascience_course_filter
-  view_name: datascience_course_filter
+  from: dim_section
+  view_name: dim_section
   extends: [sections_students_assignments]
 
-  join: dim_section {
-    sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
-    relationship: one_to_one
-    type: inner
-  }
+#   join: dim_section {
+#     sql_on:  ${datascience_course_filter.section_id} = ${dim_section.section_id} ;;
+#     relationship: one_to_one
+#     type: inner
+#   }
 
   # get student results - assignment level
   join: assignment_final {

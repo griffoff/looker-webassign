@@ -1,4 +1,4 @@
-include: "/core/fivetran.view.lkml"
+include: "//core/fivetran.view.lkml"
 view: fivetran_audit {
   extends: [fivetran_audit_base]
 
