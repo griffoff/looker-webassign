@@ -6,7 +6,7 @@ view: dim_deployment {
       select d.*, d1.first_response_et is not null as has_response, d1.first_response_et
       from FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT d
       left join (
-        select deployment_id, min(created_at) as first_response_et
+        select deployment_id, min(logged) as first_response_et
         from ${responses.SQL_TABLE_NAME}
         group by 1
       ) d1 on d.deployment_id = d1.deployment_id;;

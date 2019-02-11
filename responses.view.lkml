@@ -4,17 +4,17 @@ view: responses {
  derived_table: {
 #     sql:
 #       select
-#         to_date("CREATED_AT") as Submission_Date,*
+#         to_date("logged") as Submission_Date,*
 #       from wa_app_activity.responses
-#       where to_date("CREATED_AT") > '2016-01-01' ;;
+#       where to_date("logged") > '2016-01-01' ;;
     sql:
        with r as (
             select
               *
-              ,datediff(second, created_at, updated_at) as time_secs
+              ,datediff(second, logged, logged) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from wa_app_activity.RESPONSES
-     --       where CREATED_AT >= '2017-01-01'
+            from PROD.WEBASSIGN.RESPONSES
+     --       where logged >= '2017-01-01'
         )
       ,q as (
           select
@@ -35,26 +35,26 @@ view: responses {
             select
                 r.user_id, r.deployment_id, r.question_id, r.boxnum
                 ,max(attempt_num) as final_attempt_num
-                ,min(created_at) as first_attempt_start
-                ,max(updated_at) as final_attempt_finish
+                ,min(logged) as first_attempt_start
+                ,max(logged) as final_attempt_finish
                 ,sum(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as total_time_secs
                 ,avg(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as avg_time_secs
               --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
               --  ,listagg(
-              --         to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --         to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
               --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
                 ,max(case when attempt_num = 1 then is_correct else 0 end) as correct_attempt_1
                 ,max(case when attempt_num <= 2 then is_correct else 0 end) as correct_attempt_in_2
                 ,max(case when attempt_num <= 3 then is_correct else 0 end) as correct_attempt_in_3
               --  ,array_to_string(
-              --    array_agg(to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+              --    array_agg(to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
               --    , '\n')
               ,'TO DO' as all_attempt_starts
               --  ,array_to_string(array_agg(
               --      object_construct(
               --        'attempt', attempt_num
-              --        ,'start', to_varchar(created_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --        ,'finish', to_varchar(updated_at, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --        ,'start', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+              --        ,'finish', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
               --        ,'points scored', points_scored
               --        ,'override', override_score
               --      )
@@ -66,7 +66,7 @@ view: responses {
             group by 1, 2, 3, 4
         )
         select
-            --r.created_at::date as Submission_Date
+            --r.logged::date as Submission_Date
             r.*
             ,case when r.time_secs <= least(q_max_excl_outliers, 15 * 60) then r.time_secs else null end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
             ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
@@ -241,7 +241,7 @@ view: responses {
       quarter,
       year
     ]
-    sql: ${TABLE}.CREATED_AT ;;
+    sql: ${TABLE}.logged ;;
     hidden: yes
 
   }
@@ -363,7 +363,7 @@ view: responses {
       year,
       fiscal_year
     ]
-    sql: ${TABLE}.UPDATED_AT;;
+    sql: ${TABLE}.logged;;
   }
 
   dimension: userid {

@@ -3,7 +3,7 @@ view: dim_section {
   derived_table: {
     sql:
       with dates as (
-        select section_id, min(created_at) as first_response_et, max(created_at) as last_response_et
+        select section_id, min(logged) as first_response_et, max(logged) as last_response_et
         from LOOKER_SCRATCH.LR$6T4EEROGPZFRVZC2GMPOH_responses r
         inner join FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT d on r.deployment_id = d.deployment_id
         group by 1

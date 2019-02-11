@@ -7,7 +7,7 @@ view: section_weeks {
           --104 covers 99% of the courses
         )
         ,response as (
-            select section_id, min(created_at) as first_response_created, max(updated_at) as last_response_update
+            select section_id, min(logged) as first_response_created, max(logged) as last_response_update
             from ${responses.SQL_TABLE_NAME} r
             inner join ${dim_deployment.SQL_TABLE_NAME} d on r.deployment_id = d.deployment_id
             group by section_id

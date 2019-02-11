@@ -20,7 +20,7 @@ view: roster {
       quarter,
       year
     ]
-    sql: ${TABLE}.CREATED_AT ;;
+    sql: ${TABLE}.logged ;;
   }
 
   dimension_group: dropdate {

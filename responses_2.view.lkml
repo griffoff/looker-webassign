@@ -13,7 +13,7 @@ view: responses_2 {
               *
               ,datediff(second, created_at, updated_at) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from webassign.wa_app_activity.RESPONSES
+            from PROD.WEBASSIGN.RESPONSES
             where CREATED_AT >= '2017-01-01'
         )
       ,q as (
