@@ -4,7 +4,7 @@ view: dim_section {
     sql:
       with dates as (
         select section_id, min(logged) as first_response_et, max(logged) as last_response_et
-        from LOOKER_SCRATCH.LR$6T4EEROGPZFRVZC2GMPOH_responses r
+        from ${responses.SQL_TABLE_NAME} r
         inner join FT_OLAP_REGISTRATION_REPORTS.DIM_DEPLOYMENT d on r.deployment_id = d.deployment_id
         group by 1
       )
