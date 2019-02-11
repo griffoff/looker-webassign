@@ -2,11 +2,6 @@ view: responses {
 #  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
  derived_table: {
-#     sql:
-#       select
-#         to_date("logged") as Submission_Date,*
-#       from wa_app_activity.responses
-#       where to_date("logged") > '2016-01-01' ;;
     sql:
        with r as (
             select
@@ -14,7 +9,6 @@ view: responses {
               ,datediff(second, logged, logged) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
             from PROD.WEBASSIGN.RESPONSES
-     --       where logged >= '2017-01-01'
         )
       ,q as (
           select
