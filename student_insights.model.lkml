@@ -31,7 +31,7 @@ explore: sections_students {
 
   # get user details
   join: users {
-    fields: [users.user_id, users.sso_guid, login_recency, users.usercount]
+#     fields: [users.user_id, users.sso_guid, login_recency, users.usercount]
     from: users_extended
     sql_on: ${roster.user} = ${users.id} ;;
     relationship: many_to_one
