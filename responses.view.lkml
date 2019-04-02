@@ -409,4 +409,18 @@ view: responses {
     drill_fields: [all*]
   }
 
+  dimension: points_received {
+    label: "Individual Question - Points Scored"
+    type: number
+    sql: ${TABLE}.POINTS_SCORED ;;
+    hidden: no
+  }
+
+  dimension: points_possible {
+    label: "Individual Question - Points Possible"
+    type: number
+    sql: ${TABLE}.TOTAL ;;
+    hidden: no
+  }
+
 }
