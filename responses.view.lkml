@@ -410,17 +410,24 @@ view: responses {
   }
 
   dimension: points_received {
-    label: "Individual Question - Points Scored"
+    label: "Item - Points Scored"
     type: number
     sql: ${TABLE}.POINTS_SCORED ;;
     hidden: no
   }
 
   dimension: points_possible {
-    label: "Individual Question - Points Possible"
+    label: "Item - Points Possible"
     type: number
     sql: ${TABLE}.TOTAL ;;
     hidden: no
+  }
+
+  dimension: scorepercentage{
+    label: "Item Score (%)"
+    type: number
+    value_format: "0\%"
+    sql: 100.0 * ${responses.points_received} / NULLIF(${responses.points_possible}, 0) ;;
   }
 
 }
