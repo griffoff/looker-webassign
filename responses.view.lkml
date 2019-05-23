@@ -92,7 +92,7 @@ view: responses {
       primary_key: yes
       type: number
       sql: ${TABLE}.ID ;;
-      hidden: yes
+      hidden: no
     }
 
 #     dimension: reverse_attemptnumber {
@@ -423,9 +423,9 @@ view: responses {
     hidden: no
   }
 
-  dimension: scorepercentage{
+  measure: scorepercentage{
     label: "Item Score (%)"
-    type: number
+    type: average
     value_format: "0\%"
     sql: 100.0 * ${responses.points_received} / NULLIF(${responses.points_possible}, 0) ;;
   }
