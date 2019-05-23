@@ -48,6 +48,12 @@ explore: responses {
     relationship: many_to_one
   }
 
+  join: wvu_items {
+    sql_on: ${responses.questionid} = ${wvu_items.question_identifier};;
+    relationship: many_to_one
+  }
+
+
 #  join: dim_school {
 #     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
 #     relationship: many_to_one
