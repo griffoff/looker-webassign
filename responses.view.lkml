@@ -246,6 +246,13 @@ view: responses {
     sql: ${TABLE}.IS_CORRECT = 1 ;;
   }
 
+  measure: correctincorrectpoints {
+    label: "Correct/Incorrect - No Bonus"
+    type: average
+    value_format_name: percent_1
+    sql: ${TABLE}.IS_CORRECT ;;
+  }
+
   measure: numberwrong {
     label: "# Wrong"
     type: sum
