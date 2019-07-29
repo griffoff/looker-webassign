@@ -1,3 +1,4 @@
+
 # include all the views
 include: "[!_stats]*.view.lkml"
 # include dims model
@@ -13,7 +14,7 @@ explore: fivetran_audit {}
 
 explore: responses {
   extends: [dim_question, dim_deployment]
-  label: "Sudent Take Analysis"
+  label: "Sudent Take Analysis (WA)"
   #from: responses_extended
   #view_name: responses
 
