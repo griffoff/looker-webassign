@@ -41,29 +41,34 @@ view: wvu_items {
   }
 
   dimension: lo_tag_id_combined_set_1_ {
+    group_label: "WVU"
     label: "Learning Objective"
     type: string
     sql: ${TABLE}."LO_TAG_ID_COMBINED_SET_1_" ;;
   }
 
   dimension: multiple_los_tag_id_list_all_ {
+    group_label: "WVU"
     type: string
     sql: ${TABLE}."MULTIPLE_LOS_TAG_ID_LIST_ALL_" ;;
   }
 
   dimension: question_id {
+    group_label: "WVU"
     label: "Question Name"
     type: string
     sql: ${TABLE}."QUESTION_ID" ;;
   }
 
   dimension: question_identifier {
+    group_label: "WVU"
     type: number
     value_format_name: id
     sql: ${TABLE}."QUESTION_IDENTIFIER" ;;
   }
 
   measure: count {
+    group_label: "WVU"
     type: count
     drill_fields: []
   }

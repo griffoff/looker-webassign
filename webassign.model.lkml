@@ -49,7 +49,14 @@ explore: responses {
     relationship: many_to_one
   }
 
+  join: lti_users_wa_user {
+    view_label: "LMS User Info"
+    sql_on: ${users.id} = ${lti_users_wa_user.wa_user_id} ;;
+    relationship: many_to_one
+  }
+
   join: wvu_items {
+    view_label: "LOTS"
     sql_on: ${responses.questionid} = ${wvu_items.question_identifier};;
     relationship: many_to_one
   }
