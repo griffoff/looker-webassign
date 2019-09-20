@@ -61,6 +61,12 @@ explore: responses {
     relationship: many_to_one
   }
 
+  join: ucc_items {
+    view_label: "LOTS"
+    sql_on: ${responses.questionid} = ${ucc_items.id};;
+    relationship: many_to_one
+  }
+
 
 #  join: dim_school {
 #     sql_on: ${dim_school.school_id} = ${user_sso_guid.school_id} ;;
