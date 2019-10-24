@@ -36,13 +36,14 @@ view: wvu_items {
 
   dimension: learning_outcome_tag_set_1_ {
     type: string
+    group_label: "WVU"
+    label: "Learning Objective"
     sql: ${TABLE}."LEARNING_OUTCOME_TAG_SET_1_" ;;
-    hidden: yes
+    hidden: no
   }
 
   dimension: lo_tag_id_combined_set_1_ {
     group_label: "WVU"
-    label: "Learning Objective"
     type: string
     sql: ${TABLE}."LO_TAG_ID_COMBINED_SET_1_" ;;
   }
