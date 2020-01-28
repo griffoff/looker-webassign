@@ -29,6 +29,7 @@ view: ucc_ampup {
   }
 
   dimension: amp_up {
+    label: "AMP UP - 119"
     group_label: "UCC"
     type: string
     sql: ${TABLE}."AMP_UP" ;;

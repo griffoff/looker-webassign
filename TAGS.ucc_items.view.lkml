@@ -40,9 +40,11 @@ view: ucc_items {
     group_label: "UCC"
     type: number
     sql: ${TABLE}."CHAPTER" ;;
+    hidden: yes
   }
 
   dimension: code {
+    label: "Question Name - 119"
     group_label: "UCC"
     type: string
     sql: ${TABLE}."CODE" ;;
@@ -52,45 +54,53 @@ view: ucc_items {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."COMMENT" ;;
+    hidden: yes
   }
 
   dimension: discipline {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."DISCIPLINE" ;;
+    hidden: yes
   }
 
   dimension: first_saved_on {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."FIRST_SAVED_ON" ;;
+    hidden: yes
   }
 
   dimension: in_cp_ {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."IN_CP_" ;;
+    hidden: yes
   }
 
   dimension: in_psp_ {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."IN_PSP_" ;;
+    hidden: yes
   }
 
   dimension: last_saved_on {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."LAST_SAVED_ON" ;;
+    hidden: yes
   }
 
   dimension: lo_set_1 {
+    label: "Learning Outcomes - 119"
     group_label: "UCC"
     type: string
     sql: ${TABLE}."LO_SET_1" ;;
   }
 
   dimension: lo_set_2 {
+    label: "Topics - 119"
     group_label: "UCC"
     type: string
     sql: ${TABLE}."LO_SET_2" ;;
@@ -100,12 +110,14 @@ view: ucc_items {
     group_label: "UCC"
     type: string
     sql: ${TABLE}."SUBDISCIPLINE" ;;
+    hidden: yes
   }
 
   dimension: textbook {
     group_label: "UCC"
     type: number
     sql: ${TABLE}."TEXTBOOK" ;;
+    hidden: yes
   }
 
   measure: count {
