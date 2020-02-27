@@ -437,4 +437,11 @@ view: responses {
     sql: 100.0 * ${responses.points_received} / NULLIF(${responses.points_possible}, 0) ;;
   }
 
+  measure: response_part_count {
+    label: "# Question Parts"
+    description: "# of question parts answered by students"
+    type: count_distinct
+    sql: hash(${questionid}, ${boxnum},${attemptnumber},${id}) ;;
+  }
+
 }
