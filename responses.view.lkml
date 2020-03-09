@@ -8,7 +8,7 @@ view: responses {
               *
               ,datediff(second, logged, logged) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from PROD.WEBASSIGN.RESPONSES
+            from PROD.WEBASSIGN.RESPONSES_DEDUPED
         )
       ,q as (
           select
