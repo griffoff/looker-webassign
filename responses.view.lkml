@@ -2,85 +2,206 @@ view: responses {
 #  sql_table_name: TEST.PG_TEST_RESPONSES ;;
   view_label: "Responses"
  derived_table: {
-    sql:
-       with r as (
-            select
-              *
-              ,datediff(second, logged, logged) as time_secs
-              ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
-            from PROD.WEBASSIGN.RESPONSES_DEDUPED
-        )
-      ,q as (
-          select
-                question_id
-                ,boxnum
-                --include up to 96% of the data for calculating stats, so as to exclude outliers
-                ,avg(case when q_percentile <= 0.96 and time_secs <= (60 * 15) then time_secs end) as q_avg_excl_outliers
-                ,median(case when q_percentile <= 0.96 and time_secs <= (60 * 15)  then time_secs end) as q_median_excl_outliers
-                ,max(case when q_percentile <= 0.96 then time_secs end) as q_max_excl_outliers
-                --stats for entire population
-                ,avg(time_secs) as q_avg
-                ,median(time_secs) as q_median
-                ,max(time_secs) as q_max
-          from r
-          group by 1, 2
-        )
-      ,final_response as (
-            select
-                r.user_id, r.deployment_id, r.question_id, r.boxnum
-                ,max(attempt_num) as final_attempt_num
-                ,min(logged) as first_attempt_start
-                ,max(logged) as final_attempt_finish
-                ,sum(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as total_time_secs
-                ,avg(case when r.time_secs > least(q_max_excl_outliers, 15 * 60) then null else r.time_secs end) as avg_time_secs
-              --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
-              --  ,listagg(
-              --         to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
-                ,max(case when attempt_num = 1 then is_correct else 0 end) as correct_attempt_1
-                ,max(case when attempt_num <= 2 then is_correct else 0 end) as correct_attempt_in_2
-                ,max(case when attempt_num <= 3 then is_correct else 0 end) as correct_attempt_in_3
-              --  ,array_to_string(
-              --    array_agg(to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
-              --    , '\n')
-              ,'TO DO' as all_attempt_starts
-              --  ,array_to_string(array_agg(
-              --      object_construct(
-              --        'attempt', attempt_num
-              --        ,'start', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --        ,'finish', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
-              --        ,'points scored', points_scored
-              --        ,'override', override_score
-              --      )
-              --    ) within group (order by attempt_num)
-              --  ,'\n*********\n')
-              ,'TO DO'  as all_attempts
-            from r
-            inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-            group by 1, 2, 3, 4
-        )
-        select
-            --r.logged::date as Submission_Date
-            r.*
-            ,case when r.time_secs <= least(q_max_excl_outliers, 15 * 60) then r.time_secs else null end as derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
-            ,avg(derived_time_secs) over (partition by r.deployment_id, r.question_id, r.boxnum) as section_avg_time_secs
-            ,avg(derived_time_secs) over (partition by r.question_id, r.boxnum) as question_avg_time_secs
-            ,datediff(second, first_attempt_start, final_attempt_finish) as question_duration_secs
-            ,f.final_attempt_num is not null as final_attempt
-            ,f.first_attempt_start
-            ,f.final_attempt_finish
-            ,f.total_time_secs
-            ,f.avg_time_secs
-            ,f.all_attempt_starts
-            ,f.all_attempts
-            ,f.correct_attempt_1
-            ,f.correct_attempt_in_2
-            ,f.correct_attempt_in_3
-        from r
-        inner join q on (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
-        left join final_response f on (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) = (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
 
+  create_process: {
+    sql_step:
+      CREATE TRANSIENT TABLE IF NOT EXISTS looker_scratch.responses_deduped
+      CLUSTER BY (question_id, boxnum)
+      (
+          id INT
+          , deployment_id INT
+          , user_id INT
+          , question_id INT
+          , boxnum INT
+          , is_correct INT
+          , logged TIMESTAMP_TZ
+          , attempt_num INT
+          , override_score NUMBER(27, 9)
+          , points_scored NUMBER(27, 9)
+          , total NUMBER(27, 9)
+          , response STRING
+          , ptr INT
+          , seed STRING
+          , def STRING
+          , logloc INT
+      )
       ;;
+
+    sql_step:
+        MERGE INTO looker_scratch.responses_deduped t
+          USING (
+                  SELECT MIN(r.id) AS id
+                       , r.deployment_id
+                       , r.user_id
+                       , r.question_id
+                       , r.boxnum
+                       , r.is_correct
+                       , MIN(r.logged) AS logged
+                       , r.attempt_num
+                       , r.override_score
+                       , r.points_scored
+                       , r.total
+                       , r.response
+                       , r.ptr
+                       , r.seed
+                       , r.def
+                       , r.logloc
+                  FROM prod.webassign.responses r
+                  WHERE logged > (
+                                   SELECT COALESCE(MAX(logged), '1970-01-10')
+                                   FROM looker_scratch.responses_deduped
+                                 )
+                  GROUP BY r.deployment_id
+                         , r.user_id
+                         , r.question_id
+                         , r.boxnum
+                         , r.is_correct
+                         , r.attempt_num
+                         , r.override_score
+                         , r.points_scored
+                         , r.total
+                         , r.response
+                         , r.ptr
+                         , r.seed
+                         , r.def
+                         , r.logloc
+                  ORDER BY r.question_id, r.boxnum
+                ) s ON (t.deployment_id, t.user_id, t.question_id, t.boxnum, t.attempt_num) = (s.deployment_id, s.user_id, s.question_id, s.boxnum, s.attempt_num)
+          WHEN NOT MATCHED THEN INSERT (
+            id
+            ,deployment_id
+            , user_id
+            , question_id
+            , boxnum
+            , is_correct
+            , logged
+            , attempt_num
+            , override_score
+            , points_scored
+            , total
+            , response
+            , ptr
+            , SEED
+            , def
+            , logloc
+            )
+            VALUES (s.id
+                   , s.deployment_id
+                   , s.user_id
+                   , s.question_id
+                   , s.boxnum
+                   , s.is_correct
+                   , s.logged
+                   , s.attempt_num
+                   , s.override_score
+                   , s.points_scored
+                   , s.total
+                   , s.response
+                   , s.ptr
+                   , s.SEED
+                   , s.def
+                   , s.logloc)
+        ;;
+
+    sql_step:
+      ALTER TABLE looker_scratch.responses_deduped RECLUSTER
+    ;;
+
+    sql_step:
+      CREATE OR REPLACE TRANSIENT TABLE ${SQL_TABLE_NAME}
+      AS
+      WITH r AS (
+                  SELECT *
+                       , datediff(SECOND, logged, logged) AS time_secs
+                       , percent_rank() OVER (PARTITION BY question_id, boxnum ORDER BY time_secs) AS q_percentile
+                  FROM looker_scratch.responses_deduped
+                )
+         , q AS (
+                  SELECT question_id
+                       , boxnum
+                       --include up to 96% of the data for calculating stats, so as to exclude outliers
+                       , avg(
+                          CASE WHEN q_percentile <= 0.96 AND time_secs <= (60 * 15) THEN time_secs END) AS q_avg_excl_outliers
+                       , median(
+                          CASE WHEN q_percentile <= 0.96 AND time_secs <= (60 * 15) THEN time_secs END) AS q_median_excl_outliers
+                       , max(CASE WHEN q_percentile <= 0.96 THEN time_secs END) AS q_max_excl_outliers
+                       --stats for entire population
+                       , avg(time_secs) AS q_avg
+                       , median(time_secs) AS q_median
+                       , max(time_secs) AS q_max
+                  FROM r
+                  GROUP BY 1, 2
+                )
+         , final_response AS (
+                               SELECT r.user_id
+                                    , r.deployment_id
+                                    , r.question_id
+                                    , r.boxnum
+                                    , max(attempt_num) AS final_attempt_num
+                                    , min(logged) AS first_attempt_start
+                                    , max(logged) AS final_attempt_finish
+                                    , sum(CASE
+                                            WHEN r.time_secs > least(q_max_excl_outliers, 15 * 60) THEN NULL
+                                            ELSE r.time_secs
+                                          END) AS total_time_secs
+                                    , avg(CASE
+                                            WHEN r.time_secs > least(q_max_excl_outliers, 15 * 60) THEN NULL
+                                            ELSE r.time_secs
+                                          END) AS avg_time_secs
+                                    --THIS FAILS AT THE MOMENT, BUT IS FASTER THAN THE WORKAROUND : USE ARRAY_TO_STRING(ARRAY_AGG())
+                                    --  ,listagg(
+                                    --         to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                                    --          ,'\n') within group (order by attempt_num)::string as all_attempt_starts
+                                    , max(CASE WHEN attempt_num = 1 THEN is_correct ELSE 0 END) AS correct_attempt_1
+                                    , max(CASE WHEN attempt_num <= 2 THEN is_correct ELSE 0 END) AS correct_attempt_in_2
+                                    , max(CASE WHEN attempt_num <= 3 THEN is_correct ELSE 0 END) AS correct_attempt_in_3
+                                    --  ,array_to_string(
+                                    --    array_agg(to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')) within group (order by attempt_num)
+                                    --    , '\n')
+                                    , 'TO DO' AS all_attempt_starts
+                                    --  ,array_to_string(array_agg(
+                                    --      object_construct(
+                                    --        'attempt', attempt_num
+                                    --        ,'start', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                                    --        ,'finish', to_varchar(logged, 'YYYY-MM-DD HH24:mi:ss (TZHTZM)')
+                                    --        ,'points scored', points_scored
+                                    --        ,'override', override_score
+                                    --      )
+                                    --    ) within group (order by attempt_num)
+                                    --  ,'\n*********\n')
+                                    , 'TO DO' AS all_attempts
+                               FROM r
+                                    INNER JOIN q ON (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+                               GROUP BY 1, 2, 3, 4
+                             )
+      SELECT
+           --r.logged::date as Submission_Date
+        r.*
+           , CASE
+               WHEN r.time_secs <= least(q_max_excl_outliers, 15 * 60) THEN r.time_secs
+               ELSE NULL
+             END AS derived_time_secs --replace time with null (unknown) for outliers so that they don't affect the average
+           , avg(derived_time_secs) OVER (PARTITION BY r.deployment_id, r.question_id, r.boxnum) AS section_avg_time_secs
+           , avg(derived_time_secs) OVER (PARTITION BY r.question_id, r.boxnum) AS question_avg_time_secs
+           , datediff(SECOND, first_attempt_start, final_attempt_finish) AS question_duration_secs
+           , f.final_attempt_num IS NOT NULL AS final_attempt
+           , f.first_attempt_start
+           , f.final_attempt_finish
+           , f.total_time_secs
+           , f.avg_time_secs
+           , f.all_attempt_starts
+           , f.all_attempts
+           , f.correct_attempt_1
+           , f.correct_attempt_in_2
+           , f.correct_attempt_in_3
+      FROM r
+             INNER JOIN q ON (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
+             LEFT JOIN final_response f ON (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) =
+                                           (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
+
+    ;;
+
+  }
 
       datagroup_trigger: responses_datagroup
     }
