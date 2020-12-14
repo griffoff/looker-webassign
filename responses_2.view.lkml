@@ -11,7 +11,7 @@ view: responses_2 {
        with r as (
             select
               *
-              ,datediff(second, created_at, updated_at) as time_secs
+              ,datediff(second, logged, logged) as time_secs
               ,percent_rank() over (partition by question_id, boxnum order by time_secs) as q_percentile
             from PROD.WEBASSIGN.RESPONSES
             where CREATED_AT >= '2017-01-01'
