@@ -109,6 +109,7 @@ view: responses {
 
     sql_step:
       CREATE OR REPLACE TRANSIENT TABLE ${SQL_TABLE_NAME}
+      CLUSTER BY (logged)
       AS
       WITH r AS (
                   SELECT *
@@ -198,7 +199,7 @@ view: responses {
              INNER JOIN q ON (r.question_id, r.boxnum) = (q.question_id, q.boxnum)
              LEFT JOIN final_response f ON (r.user_id, r.deployment_id, r.question_id, r.boxnum, r.attempt_num) =
                                            (f.user_id, f.deployment_id, f.question_id, f.boxnum, f.final_attempt_num)
-
+      ORDER BY logged;
     ;;
 
   }
