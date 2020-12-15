@@ -538,6 +538,12 @@ view: responses {
     drill_fields: [all*]
   }
 
+  measure: latest_response {
+    label: "Most recent response"
+    type: date_raw
+    sql: MAX(${updatedat_raw}) ;;
+  }
+
   dimension: points_received {
     label: "Item - Points Scored"
     type: number
