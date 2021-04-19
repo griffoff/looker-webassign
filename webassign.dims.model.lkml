@@ -48,6 +48,13 @@ explore: dim_deployment {
     sql_on: ${dim_deployment.assignment_id} = ${dim_assignment.assignment_id};;
     relationship: many_to_one
   }
+
+  join: rcc_assignment_level_items {
+    view_label: "LOTS"
+    sql_on: ${dim_assignment.name} = ${rcc_assignment_level_items.assignment} ;;
+    relationship: many_to_one
+
+  }
 }
 
 explore: dim_question {
