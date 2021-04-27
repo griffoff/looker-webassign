@@ -1,4 +1,5 @@
 include: "//core/fivetran.view.lkml"
+include: "//core/datagroups.lkml"
 view: fivetran_audit {
   extends: [fivetran_audit_base]
 
@@ -16,7 +17,7 @@ view: fivetran_audit {
         select ID,MESSAGE,UPDATE_STARTED,UPDATE_ID,fivetran_audit.SCHEMA,fivetran_audit."TABLE",DONE,ROWS_UPDATED_OR_INSERTED,fivetran_audit."START",fivetran_audit.STATUS,PROGRESS
         from wa_app_v4net.fivetran_audit
       ;;
-    persist_for: "1 hour"
+    datagroup_trigger: hourly_refresh
   }
 
   dimension: database_name {
